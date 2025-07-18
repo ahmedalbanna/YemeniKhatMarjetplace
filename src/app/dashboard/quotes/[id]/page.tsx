@@ -6,9 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Send, User, Package, MessageSquare, MapPin, DollarSign } from 'lucide-react';
+import { ArrowLeft, Send, User, Package, MessageSquare, MapPin, DollarSign, CornerDownLeft } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function QuoteDetailPage() {
     const params = useParams();
@@ -22,82 +26,62 @@ export default function QuoteDetailPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-3xl">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
             <Button variant="ghost" onClick={() => router.back()} className="mb-4">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 العودة إلى الطلبات
             </Button>
-            <Card>
-                <CardHeader>
-                    <div className="flex justify-between items-start">
-                        <div>
-                            <CardTitle className="font-headline text-2xl">تفاصيل طلب عرض السعر</CardTitle>
-                            <CardDescription>مراجعة الطلب والرد على العميل بسعر نهائي.</CardDescription>
-                        </div>
-                         <Badge
-                            variant="outline"
-                            className="capitalize h-fit"
-                         >
-                            {quote.status}
-                        </Badge>
-                    </div>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {/* Customer Info */}
-                        <Card>
-                            <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
-                                <User className="h-6 w-6 text-primary"/>
-                                <CardTitle className="text-lg font-bold">العميل</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="font-semibold">{quote.customerName}</p>
-                                <p className="text-sm text-muted-foreground">طلب بتاريخ: {new Date(quote.date).toLocaleDateString()}</p>
-                            </CardContent>
-                        </Card>
-                        {/* Product Info */}
-                         <Card>
-                            <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
-                                <Package className="h-6 w-6 text-primary"/>
-                                <CardTitle className="text-lg font-bold">المنتج المطلوب</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="font-semibold">{quote.productName}</p>
-                                <div className="text-sm text-muted-foreground">
-                                    <span>النوع: {quote.khatTypeName}</span>
-                                    <span className="mx-2">|</span>
-                                    <span>الكمية: {quote.quantity}</span>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    </div>
-
-                    {/* Message & Delivery */}
+            <div className="grid lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2 space-y-6">
+                    {/* Chat/Negotiation Card */}
                     <Card>
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-lg font-bold">معلومات إضافية</CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                            <div className="flex items-start gap-3">
-                                <MessageSquare className="h-5 w-5 text-muted-foreground mt-1 flex-shrink-0" />
+                        <CardHeader>
+                             <div className="flex justify-between items-start">
                                 <div>
-                                    <p className="font-semibold">رسالة العميل</p>
-                                    <p className="text-sm text-muted-foreground p-3 bg-muted/50 rounded-md">{"لا يوجد رسالة."}</p>
+                                    <CardTitle className="font-headline text-2xl">المفاوضات</CardTitle>
+                                    <CardDescription>تواصل مع العميل لتحديد السعر النهائي.</CardDescription>
                                 </div>
+                                <Badge
+                                    variant="outline"
+                                    className="capitalize h-fit"
+                                >
+                                    {quote.status}
+                                </Badge>
                             </div>
-                            <Separator />
-                            <div className="flex items-start gap-3">
-                                <MapPin className="h-5 w-5 text-muted-foreground mt-1 flex-shrink-0" />
-                                <div>
-                                    <p className="font-semibold">خيار الاستلام</p>
-                                    <p className="text-sm text-muted-foreground">توصيل إلى المنزل</p>
-                                    <p className="text-xs text-muted-foreground p-3 bg-muted/50 rounded-md">شارع حدة، صنعاء، اليمن</p>
+                        </CardHeader>
+                        <CardContent>
+                            <ScrollArea className="h-[300px] w-full pr-4 mb-4">
+                                <div className="space-y-4">
+                                    {quote.messages.map((msg, index) => (
+                                        <div key={index} className={cn("flex items-end gap-2", msg.sender === 'Vendor' ? 'justify-end' : 'justify-start')}>
+                                            {msg.sender === 'Customer' && (
+                                                <Avatar className="h-8 w-8">
+                                                    <AvatarFallback>{quote.customerName.charAt(0)}</AvatarFallback>
+                                                </Avatar>
+                                            )}
+                                            <div className={cn("max-w-xs md:max-w-md p-3 rounded-lg", msg.sender === 'Vendor' ? 'bg-primary text-primary-foreground' : 'bg-muted')}>
+                                                <p className="text-sm">{msg.message}</p>
+                                                <p className="text-xs text-right mt-1 opacity-70">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                            </div>
+                                             {msg.sender === 'Vendor' && (
+                                                <Avatar className="h-8 w-8">
+                                                    <AvatarFallback>V</AvatarFallback>
+                                                </Avatar>
+                                            )}
+                                        </div>
+                                    ))}
                                 </div>
+                            </ScrollArea>
+                            <div className="relative">
+                                <Textarea placeholder="اكتب رسالتك هنا..." className="pr-16" rows={3}/>
+                                <Button size="icon" className="absolute top-1/2 right-3 -translate-y-1/2">
+                                    <CornerDownLeft className="h-5 w-5" />
+                                </Button>
                             </div>
                         </CardContent>
                     </Card>
 
-                     {/* Pricing Section */}
+                    {/* Pricing Section */}
                     <Card className="bg-muted/30">
                         <CardHeader className="pb-4">
                             <CardTitle className="text-lg font-bold">التسعير</CardTitle>
@@ -115,16 +99,59 @@ export default function QuoteDetailPage() {
                                 </div>
                             </div>
                         </CardContent>
+                        <CardFooter className="flex justify-end pt-4">
+                            <Button size="lg">
+                                <Send className="mr-2 h-5 w-5"/>
+                                إرسال عرض السعر النهائي
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+
+                <div className="lg:col-span-1 space-y-6">
+                     {/* Customer Info */}
+                    <Card>
+                        <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
+                            <User className="h-6 w-6 text-primary"/>
+                            <CardTitle className="text-lg font-bold">العميل</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="font-semibold">{quote.customerName}</p>
+                            <p className="text-sm text-muted-foreground">طلب بتاريخ: {new Date(quote.date).toLocaleDateString()}</p>
+                        </CardContent>
+                    </Card>
+                    
+                    {/* Product Info */}
+                    <Card>
+                        <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
+                            <Package className="h-6 w-6 text-primary"/>
+                            <CardTitle className="text-lg font-bold">المنتج المطلوب</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="font-semibold">{quote.productName}</p>
+                            <div className="text-sm text-muted-foreground">
+                                <span>النوع: {quote.khatTypeName}</span>
+                                <span className="mx-2">|</span>
+                                <span>الكمية: {quote.quantity}</span>
+                            </div>
+                        </CardContent>
                     </Card>
 
-                </CardContent>
-                <CardFooter className="flex justify-end">
-                    <Button size="lg">
-                        <Send className="mr-2 h-5 w-5"/>
-                        إرسال عرض السعر للعميل
-                    </Button>
-                </CardFooter>
-            </Card>
+                    {/* Delivery Info */}
+                    <Card>
+                        <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
+                            <MapPin className="h-6 w-6 text-primary"/>
+                            <CardTitle className="text-lg font-bold">معلومات الاستلام</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                             <p className="font-semibold">{quote.deliveryOption === 'Delivery' ? 'توصيل إلى المنزل' : 'استلام من المتجر'}</p>
+                             {quote.deliveryAddress && (
+                                <p className="text-sm text-muted-foreground p-2 bg-muted/50 rounded-md mt-2">{quote.deliveryAddress}</p>
+                             )}
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </div>
     );
 }

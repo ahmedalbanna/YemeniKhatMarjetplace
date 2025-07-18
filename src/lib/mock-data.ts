@@ -184,6 +184,12 @@ export const orders: Order[] = [
   },
 ];
 
+export type ChatMessage = {
+  sender: 'Customer' | 'Vendor';
+  message: string;
+  timestamp: string;
+};
+
 export type QuoteRequest = {
   id: string;
   date: string;
@@ -194,6 +200,9 @@ export type QuoteRequest = {
   status: 'New' | 'Responded' | 'Accepted' | 'Cancelled';
   estimatedPrice: number;
   finalPrice?: number;
+  messages: ChatMessage[];
+  deliveryOption: 'Delivery' | 'Pickup';
+  deliveryAddress?: string;
 };
 
 export const quoteRequests: QuoteRequest[] = [
@@ -206,6 +215,11 @@ export const quoteRequests: QuoteRequest[] = [
     quantity: 5,
     status: 'New',
     estimatedPrice: 150,
+    deliveryOption: 'Delivery',
+    deliveryAddress: 'شارع حدة، صنعاء، اليمن',
+    messages: [
+      { sender: 'Customer', message: 'مرحبًا، هل السعر قابل للتفاوض؟', timestamp: '2024-07-28T10:00:00Z' },
+    ],
   },
   {
     id: 'QT-002',
@@ -216,6 +230,8 @@ export const quoteRequests: QuoteRequest[] = [
     quantity: 10,
     status: 'New',
     estimatedPrice: 200,
+    deliveryOption: 'Pickup',
+    messages: [],
   },
   {
     id: 'QT-003',
@@ -227,6 +243,11 @@ export const quoteRequests: QuoteRequest[] = [
     status: 'Responded',
     estimatedPrice: 90,
     finalPrice: 85,
+    deliveryOption: 'Pickup',
+    messages: [
+        { sender: 'Customer', message: 'كم آخر السعر لهذه الكمية؟', timestamp: '2024-07-27T14:00:00Z' },
+        { sender: 'Vendor', message: 'أهلاً بك. يمكنني أن أقدم لك سعرًا نهائيًا قدره 85 دولارًا.', timestamp: '2024-07-27T14:05:00Z' },
+    ],
   },
    {
     id: 'QT-004',
@@ -238,6 +259,12 @@ export const quoteRequests: QuoteRequest[] = [
     status: 'Accepted',
     estimatedPrice: 200,
     finalPrice: 190,
+    deliveryOption: 'Delivery',
+    deliveryAddress: 'حي شميلة، صنعاء، اليمن',
+    messages: [
+        { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 190 دولارًا. في انتظار تأكيدك.', timestamp: '2024-07-26T09:30:00Z' },
+        { sender: 'Customer', message: 'ممتاز، موافقة. متى يمكنني توقع التوصيل؟', timestamp: '2024-07-26T09:35:00Z' },
+    ],
   },
    {
     id: 'QT-005',
@@ -248,6 +275,8 @@ export const quoteRequests: QuoteRequest[] = [
     quantity: 4,
     status: 'Cancelled',
     estimatedPrice: 112,
+    deliveryOption: 'Pickup',
+    messages: [],
   },
 ];
 
