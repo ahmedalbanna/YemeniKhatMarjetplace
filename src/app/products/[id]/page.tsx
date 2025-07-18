@@ -1,12 +1,12 @@
 'use client';
 
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { products, KhatType } from '@/lib/mock-data';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, Minus, Plus, ShoppingCart, Leaf } from 'lucide-react';
+import { Star, Minus, Plus, MessageSquareQuote, Leaf } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { useState } from 'react';
 import { Separator } from '@/components/ui/separator';
@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label';
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
   const [quantity, setQuantity] = useState(1);
   const [selectedType, setSelectedType] = useState<KhatType | null>(null);
+  const router = useRouter();
 
   const product = products.find((p) => p.id === params.id);
 
@@ -31,6 +32,17 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
       const type = product?.khatTypes?.find(t => t.id === typeId) || null;
       setSelectedType(type);
       setQuantity(1);
+  }
+
+  const handleRequestQuote = () => {
+    if (product && selectedType) {
+        const query = new URLSearchParams({
+            productId: product.id,
+            typeId: selectedType.id,
+            quantity: quantity.toString(),
+        }).toString();
+        router.push(`/negotiate?${query}`);
+    }
   }
   
   // Set initial selection
@@ -78,7 +90,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             {product.category === 'Khat' && product.khatTypes && (
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-3">Select Type (per Habba)</h3>
+                <h3 className="text-lg font-semibold mb-3">اختر النوع (حسب الحبة)</h3>
                  <RadioGroup
                     value={selectedType?.id}
                     onValueChange={handleTypeSelection}
@@ -104,7 +116,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             )}
             
             <div className="flex items-center justify-between bg-muted/50 p-4 rounded-lg mb-6">
-                <span className="text-lg font-medium text-muted-foreground">Price</span>
+                <span className="text-lg font-medium text-muted-foreground">السعر المبدئي</span>
                 <p className="text-4xl font-bold text-primary">${displayPrice.toFixed(2)}</p>
             </div>
 
@@ -118,11 +130,12 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              <Button size="lg" className="w-full sm:w-auto" disabled={product.category === 'Khat' && !selectedType}>
-                <ShoppingCart className="mr-2 h-5 w-5" />
-                Add to Cart
+              <Button size="lg" className="w-full sm:w-auto" disabled={product.category === 'Khat' && !selectedType} onClick={handleRequestQuote}>
+                <MessageSquareQuote className="mr-2 h-5 w-5" />
+                اطلب عرض سعر
               </Button>
             </div>
+            <p className="text-xs text-muted-foreground mt-4">ملحوظة: السعر أعلاه هو سعر تقديري. أرسل طلبًا للحصول على السعر النهائي من البائع.</p>
           </div>
         </div>
       </Card>
