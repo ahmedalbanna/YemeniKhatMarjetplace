@@ -63,7 +63,7 @@ export default function VendorQuotesPage() {
                   <TableCell className="text-right">${req.estimatedPrice.toFixed(2)}</TableCell>
                   <TableCell className="text-right">
                     <Button variant="outline" size="sm" asChild>
-                       <Link href="#">
+                       <Link href={`/dashboard/quotes/${req.id}`}>
                          عرض والرد
                          <ExternalLink className="mr-2 h-4 w-4" />
                        </Link>
