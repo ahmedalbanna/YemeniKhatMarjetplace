@@ -11,37 +11,37 @@ export default function RegisterPage() {
       <Card className="mx-auto max-w-sm w-full">
         <CardHeader className="text-center">
            <Leaf className="mx-auto h-12 w-12 text-primary" />
-          <CardTitle className="text-2xl font-headline mt-4">Create an Account</CardTitle>
-          <CardDescription>Enter your information to get started</CardDescription>
+          <CardTitle className="text-2xl font-headline mt-4">إنشاء حساب جديد</CardTitle>
+          <CardDescription>أدخل معلوماتك للبدء</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
+          <div className="grid gap-4 text-right">
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">
-                <Label htmlFor="first-name">First name</Label>
-                <Input id="first-name" placeholder="Youssef" required />
+                <Label htmlFor="first-name">الاسم الأول</Label>
+                <Input id="first-name" placeholder="يوسف" required />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input id="last-name" placeholder="Al-Saeed" required />
+                <Label htmlFor="last-name">الاسم الأخير</Label>
+                <Input id="last-name" placeholder="السعيد" required />
               </div>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">البريد الإلكتروني</Label>
               <Input id="email" type="email" placeholder="m@example.com" required />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">كلمة المرور</Label>
               <Input id="password" type="password" />
             </div>
             <Button type="submit" className="w-full">
-              Create an account
+              إنشاء حساب
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
+            هل لديك حساب بالفعل؟{' '}
             <Link href="/login" className="underline">
-              Sign in
+              تسجيل الدخول
             </Link>
           </div>
         </CardContent>

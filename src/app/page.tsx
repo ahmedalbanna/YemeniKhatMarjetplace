@@ -21,30 +21,30 @@ export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8">
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground mb-2">Welcome to the Marketplace</h1>
-        <p className="text-lg text-muted-foreground">Discover the finest khat and accessories in Yemen.</p>
+        <h1 className="text-4xl font-headline font-bold text-primary-foreground mb-2">أهلاً بك في السوق</h1>
+        <p className="text-lg text-muted-foreground">اكتشف أجود أنواع القات والملحقات في اليمن.</p>
       </header>
 
       <div className="mb-8 p-4 bg-card rounded-lg shadow-md">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search for products..."
-              className="pl-10 w-full"
+              placeholder="ابحث عن منتجات..."
+              className="pr-10 w-full"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <Select value={category} onValueChange={setCategory}>
             <SelectTrigger className="w-full md:w-[180px]">
-              <SelectValue placeholder="All Categories" />
+              <SelectValue placeholder="جميع الفئات" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Categories</SelectItem>
-              <SelectItem value="Khat">Khat</SelectItem>
-              <SelectItem value="Accessories">Accessories</SelectItem>
+              <SelectItem value="all">جميع الفئات</SelectItem>
+              <SelectItem value="قات">قات</SelectItem>
+              <SelectItem value="ملحقات">ملحقات</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -57,7 +57,7 @@ export default function Home() {
       </div>
       {filteredProducts.length === 0 && (
          <div className="text-center col-span-full py-16">
-            <p className="text-muted-foreground">No products found matching your criteria.</p>
+            <p className="text-muted-foreground">لم يتم العثور على منتجات تطابق بحثك.</p>
          </div>
       )}
     </div>

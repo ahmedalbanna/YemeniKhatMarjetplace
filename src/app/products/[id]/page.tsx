@@ -35,10 +35,10 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   }
 
   const handleRequestQuote = () => {
-    if (product && selectedType) {
+    if (product && (selectedType || product.category !== 'قات')) {
         const query = new URLSearchParams({
             productId: product.id,
-            typeId: selectedType.id,
+            typeId: selectedType?.id || '',
             quantity: quantity.toString(),
         }).toString();
         router.push(`/negotiate?${query}`);
@@ -52,7 +52,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     }
   });
 
-  const displayPrice = product?.category === 'Khat' && selectedType
+  const displayPrice = product?.category === 'قات' && selectedType
     ? selectedType.price
     : product.price;
 
@@ -75,20 +75,20 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </Carousel>
           
           <div className="flex flex-col justify-center">
-            <Badge variant={product.category === 'Khat' ? 'default' : 'secondary'} className="mb-2 w-fit bg-primary/20 text-primary-foreground hover:bg-primary/30">{product.category}</Badge>
+            <Badge variant={product.category === 'قات' ? 'default' : 'secondary'} className="mb-2 w-fit bg-primary/20 text-primary-foreground hover:bg-primary/30">{product.category}</Badge>
             <h1 className="text-3xl lg:text-4xl font-headline font-bold mb-2">{product.name}</h1>
             <div className="flex items-center gap-4 mb-4">
-              <div className="flex items-center gap-1">
-                <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
-                <span className="font-semibold">{product.rating}</span>
-                <span className="text-sm text-muted-foreground">({product.reviews} reviews)</span>
-              </div>
+              <p className="text-sm text-muted-foreground">البائع: <span className="font-medium text-foreground">{product.vendor}</span></p>
               <Separator orientation="vertical" className="h-4" />
-              <p className="text-sm text-muted-foreground">Vendor: <span className="font-medium text-foreground">{product.vendor}</span></p>
+              <div className="flex items-center gap-1">
+                <span className="text-sm text-muted-foreground">({product.reviews} تقييم)</span>
+                <span className="font-semibold">{product.rating}</span>
+                <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+              </div>
             </div>
             <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
 
-            {product.category === 'Khat' && product.khatTypes && (
+            {product.category === 'قات' && product.khatTypes && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">اختر النوع (حسب الحبة)</h3>
                  <RadioGroup
@@ -105,9 +105,9 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                                 <p className="text-sm text-muted-foreground">{type.description}</p>
                            </div>
                         </div>
-                        <div className="text-right">
+                        <div className="text-left">
                              <p className="font-bold text-lg text-primary">${type.price.toFixed(2)}</p>
-                             <RadioGroupItem value={type.id} id={type.id} className="mt-1 ml-auto" />
+                             <RadioGroupItem value={type.id} id={type.id} className="mt-1 mr-auto" />
                         </div>
                       </Card>
                     ))}
@@ -122,16 +122,16 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="flex items-center gap-2 border rounded-md p-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleQuantityChange(-1)} disabled={product.category === 'Khat' && !selectedType}>
+                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleQuantityChange(-1)} disabled={(product.category === 'قات' && !selectedType) || quantity <= 1}>
                   <Minus className="h-4 w-4" />
                 </Button>
                 <span className="font-bold w-8 text-center">{quantity}</span>
-                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleQuantityChange(1)} disabled={product.category === 'Khat' && !selectedType}>
+                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleQuantityChange(1)} disabled={product.category === 'قات' && !selectedType}>
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              <Button size="lg" className="w-full sm:w-auto" disabled={product.category === 'Khat' && !selectedType} onClick={handleRequestQuote}>
-                <MessageSquareQuote className="mr-2 h-5 w-5" />
+              <Button size="lg" className="w-full sm:w-auto" disabled={product.category === 'قات' && !selectedType} onClick={handleRequestQuote}>
+                <MessageSquareQuote className="ml-2 h-5 w-5" />
                 اطلب عرض سعر
               </Button>
             </div>

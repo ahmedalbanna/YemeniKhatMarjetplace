@@ -8,6 +8,13 @@ import { ClipboardList, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export default function VendorQuotesPage() {
+  const statusTranslations = {
+    'New': 'جديد',
+    'Responded': 'تم الرد',
+    'Accepted': 'مقبول',
+    'Cancelled': 'ملغي'
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Card>
@@ -28,8 +35,8 @@ export default function VendorQuotesPage() {
                 <TableHead>العميل</TableHead>
                 <TableHead>المنتج</TableHead>
                 <TableHead>الحالة</TableHead>
-                <TableHead className="text-right">السعر التقديري</TableHead>
-                <TableHead className="text-right">الإجراءات</TableHead>
+                <TableHead className="text-left">السعر التقديري</TableHead>
+                <TableHead className="text-left">الإجراءات</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -51,21 +58,21 @@ export default function VendorQuotesPage() {
                       variant="outline"
                       className={cn(
                         'capitalize',
-                        req.status === 'New' && 'bg-blue-100 text-blue-800 border-blue-200',
-                        req.status === 'Responded' && 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                        req.status === 'Accepted' && 'bg-green-100 text-green-800 border-green-200',
-                        req.status === 'Cancelled' && 'bg-red-100 text-red-800 border-red-200'
+                        req.status === 'جديد' && 'bg-blue-100 text-blue-800 border-blue-200',
+                        req.status === 'تم الرد' && 'bg-yellow-100 text-yellow-800 border-yellow-200',
+                        req.status === 'مقبول' && 'bg-green-100 text-green-800 border-green-200',
+                        req.status === 'ملغي' && 'bg-red-100 text-red-800 border-red-200'
                       )}
                     >
                       {req.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">${req.estimatedPrice.toFixed(2)}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-left">${req.estimatedPrice.toFixed(2)}</TableCell>
+                  <TableCell className="text-left">
                     <Button variant="outline" size="sm" asChild>
                        <Link href={`/dashboard/quotes/${req.id}`}>
+                         <ExternalLink className="ml-2 h-4 w-4" />
                          عرض والرد
-                         <ExternalLink className="mr-2 h-4 w-4" />
                        </Link>
                     </Button>
                   </TableCell>

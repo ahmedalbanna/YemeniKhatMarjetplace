@@ -1,6 +1,6 @@
 export type KhatType = {
   id: string;
-  name: 'Ro\'os' | 'Qatol' | 'Standard';
+  name: 'رؤوس' | 'قطل' | 'عادي';
   price: number;
   description: string;
 };
@@ -8,7 +8,7 @@ export type KhatType = {
 export type Product = {
   id: string;
   name: string;
-  category: 'Khat' | 'Accessories';
+  category: 'قات' | 'ملحقات';
   price: number; // Keep a base price for accessories or general display
   description: string;
   vendor: string;
@@ -22,28 +22,28 @@ export type Product = {
 export const products: Product[] = [
   {
     id: '1',
-    name: 'Royal Green Khat',
-    category: 'Khat',
+    name: 'قات أخضر ملكي',
+    category: 'قات',
     price: 25,
-    description: 'A premium selection of the freshest khat leaves, known for their vibrant green color and potent effects. Sourced from the highlands of Yemen.',
-    vendor: 'Al-Saeed Farms',
+    description: 'تشكيلة فاخرة من أوراق القات الطازجة، تتميز بلونها الأخضر الزاهي وتأثيرها القوي. مصدرها مرتفعات اليمن.',
+    vendor: 'مزارع السعيد',
     images: ['https://placehold.co/600x600', 'https://placehold.co/600x600', 'https://placehold.co/600x600'],
     rating: 4.8,
     reviews: 120,
     dataAiHint: 'green leaves',
     khatTypes: [
-      { id: '1-1', name: 'Ro\'os', price: 30, description: 'The tender top shoots, highly prized.' },
-      { id: '1-2', name: 'Qatol', price: 25, description: 'Mid-level leaves, a balanced choice.' },
-      { id: '1-3', name: 'Standard', price: 20, description: 'Standard bundle for daily use.' },
+      { id: '1-1', name: 'رؤوس', price: 30, description: 'البراعم العلوية الطرية، ذات قيمة عالية.' },
+      { id: '1-2', name: 'قطل', price: 25, description: 'أوراق من المستوى المتوسط، خيار متوازن.' },
+      { id: '1-3', name: 'عادي', price: 20, description: 'حزمة عادية للاستخدام اليومي.' },
     ],
   },
   {
     id: '2',
-    name: 'Traditional Hookah Pipe',
-    category: 'Accessories',
+    name: 'مداعة تقليدية',
+    category: 'ملحقات',
     price: 45,
-    description: 'A beautifully crafted traditional hookah pipe (mada\'a), made from local wood and featuring intricate carvings. Perfect for a smooth experience.',
-    vendor: 'Sana\'a Crafts',
+    description: 'مداعة تقليدية مصنوعة بحرفية من الخشب المحلي وتتميز بنقوش معقدة. مثالية لتجربة سلسة.',
+    vendor: 'حرفيين صنعاء',
     images: ['https://placehold.co/600x600', 'https://placehold.co/600x600'],
     rating: 4.6,
     reviews: 85,
@@ -51,27 +51,27 @@ export const products: Product[] = [
   },
   {
     id: '3',
-    name: 'Mountain Fresh Khat',
-    category: 'Khat',
+    name: 'قات جبلي منعش',
+    category: 'قات',
     price: 20,
-    description: 'Crisp and refreshing khat, harvested daily from the terraced mountainsides. A popular choice for its balanced flavor and aroma.',
-    vendor: 'Yemen Growers Co-op',
+    description: 'قات منعش ومقرمش، يتم حصاده يومياً من سفوح الجبال المدرجة. خيار شائع لنكهته ورائحته المتوازنة.',
+    vendor: 'تعاونية مزارعي اليمن',
     images: ['https://placehold.co/600x600'],
     rating: 4.5,
     reviews: 210,
     dataAiHint: 'khat leaves',
     khatTypes: [
-        { id: '3-1', name: 'Ro\'os', price: 25, description: 'Crisp top shoots from the mountains.' },
-        { id: '3-2', name: 'Standard', price: 20, description: 'Great value mountain-fresh khat.' },
+        { id: '3-1', name: 'رؤوس', price: 25, description: 'براعم علوية مقرمشة من الجبال.' },
+        { id: '3-2', name: 'عادي', price: 20, description: 'قات جبلي منعش بقيمة رائعة.' },
     ],
   },
   {
     id: '4',
-    name: 'Flavored Tobacco (Moassel)',
-    category: 'Accessories',
+    name: 'تبغ بنكهة (معسل)',
+    category: 'ملحقات',
     price: 10,
-    description: 'A variety pack of premium flavored tobacco, including apple, mint, and grape. Triple-washed for a clean and flavorful smoke.',
-    vendor: 'Aden Imports',
+    description: 'مجموعة متنوعة من التبغ الفاخر بنكهات التفاح والنعناع والعنب. مغسول ثلاث مرات لدخان نقي ولذيذ.',
+    vendor: 'واردات عدن',
     images: ['https://placehold.co/600x600', 'https://placehold.co/600x600'],
     rating: 4.7,
     reviews: 95,
@@ -79,27 +79,27 @@ export const products: Product[] = [
   },
   {
     id: '5',
-    name: 'Golden Leaf Khat',
-    category: 'Khat',
+    name: 'قات الورقة الذهبية',
+    category: 'قات',
     price: 30,
-    description: 'A rare and sought-after variety of khat with golden-hued leaves, offering a unique and mellow experience. Limited availability.',
-    vendor: 'Al-Saeed Farms',
+    description: 'نوع نادر ومطلوب من القات بأوراق ذهبية اللون، يقدم تجربة فريدة ومعتدلة. توفر محدود.',
+    vendor: 'مزارع السعيد',
     images: ['https://placehold.co/600x600', 'https://placehold.co/600x600'],
     rating: 4.9,
     reviews: 75,
     dataAiHint: 'yellow leaves',
     khatTypes: [
-      { id: '5-1', name: 'Ro\'os', price: 35, description: 'Exclusive golden top shoots.' },
-      { id: '5-2', name: 'Qatol', price: 30, description: 'Smooth and mellow golden leaves.' },
+      { id: '5-1', name: 'رؤوس', price: 35, description: 'براعم علوية ذهبية حصرية.' },
+      { id: '5-2', name: 'قطل', price: 30, description: 'أوراق ذهبية ناعمة ومعتدلة.' },
     ],
   },
   {
     id: '6',
-    name: 'Portable Water Flask',
-    category: 'Accessories',
+    name: 'قارورة ماء محمولة',
+    category: 'ملحقات',
     price: 15,
-    description: 'A durable and insulated water flask to keep your water cool for hours. Essential for any khat session. BPA-free.',
-    vendor: 'Modern Living',
+    description: 'قارورة ماء متينة ومعزولة للحفاظ على برودة الماء لساعات. ضرورية لأي جلسة قات. خالية من BPA.',
+    vendor: 'الحياة العصرية',
     images: ['https://placehold.co/600x600'],
     rating: 4.4,
     reviews: 150,
@@ -107,27 +107,27 @@ export const products: Product[] = [
   },
     {
     id: '7',
-    name: 'Hadrami White Khat',
-    category: 'Khat',
+    name: 'قات أبيض حضرمي',
+    category: 'قات',
     price: 22,
-    description: 'A special variety from the Hadramaut region, known for its lighter color and distinctively sharp taste. A connoisseur\'s choice.',
-    vendor: 'Hadramaut Traders',
+    description: 'نوع خاص من منطقة حضرموت، معروف بلونه الفاتح وطعمه الحاد المميز. اختيار الخبراء.',
+    vendor: 'تجار حضرموت',
     images: ['https://placehold.co/600x600'],
     rating: 4.6,
     reviews: 98,
     dataAiHint: 'white leaves',
     khatTypes: [
-        { id: '7-1', name: 'Ro\'os', price: 28, description: 'Sharp-tasting top shoots from Hadramaut.' },
-        { id: '7-2', name: 'Standard', price: 22, description: 'The classic Hadrami experience.' },
+        { id: '7-1', name: 'رؤوس', price: 28, description: 'براعم علوية ذات طعم حاد من حضرموت.' },
+        { id: '7-2', name: 'عادي', price: 22, description: 'التجربة الحضرمية الكلاسيكية.' },
     ],
   },
   {
     id: '8',
-    name: 'Charcoal Burner',
-    category: 'Accessories',
+    name: 'موقد فحم',
+    category: 'ملحقات',
     price: 18,
-    description: 'An electric charcoal burner that gets your coals ready in minutes. Safe, fast, and efficient. A must-have for hookah enthusiasts.',
-    vendor: 'Sana\'a Crafts',
+    description: 'موقد فحم كهربائي يجهز الفحم في دقائق. آمن وسريع وفعال. لا غنى عنه لعشاق المداعة.',
+    vendor: 'حرفيين صنعاء',
     images: ['https://placehold.co/600x600'],
     rating: 4.8,
     reviews: 112,
@@ -138,7 +138,7 @@ export const products: Product[] = [
 export type Order = {
   id: string;
   date: string;
-  status: 'Delivered' | 'Processing' | 'Cancelled';
+  status: 'تم التوصيل' | 'قيد التجهيز' | 'ملغي';
   total: number;
   items: { productId: string; quantity: number; name: string }[];
 };
@@ -147,39 +147,39 @@ export const orders: Order[] = [
   {
     id: 'ORD-001',
     date: '2024-07-20',
-    status: 'Delivered',
+    status: 'تم التوصيل',
     total: 45,
     items: [
-      { productId: '1', quantity: 1, name: 'Royal Green Khat' },
-      { productId: '4', quantity: 2, name: 'Flavored Tobacco (Moassel)' },
+      { productId: '1', quantity: 1, name: 'قات أخضر ملكي' },
+      { productId: '4', quantity: 2, name: 'تبغ بنكهة (معسل)' },
     ],
   },
   {
     id: 'ORD-002',
     date: '2024-07-22',
-    status: 'Delivered',
+    status: 'تم التوصيل',
     total: 45,
     items: [
-      { productId: '2', quantity: 1, name: 'Traditional Hookah Pipe' },
+      { productId: '2', quantity: 1, name: 'مداعة تقليدية' },
     ],
   },
   {
     id: 'ORD-003',
     date: '2024-07-25',
-    status: 'Processing',
+    status: 'قيد التجهيز',
     total: 52,
     items: [
-      { productId: '3', quantity: 2, name: 'Mountain Fresh Khat' },
-      { productId: '6', quantity: 1, name: 'Portable Water Flask' },
+      { productId: '3', quantity: 2, name: 'قات جبلي منعش' },
+      { productId: '6', quantity: 1, name: 'قارورة ماء محمولة' },
     ],
   },
     {
     id: 'ORD-004',
     date: '2024-07-26',
-    status: 'Cancelled',
+    status: 'ملغي',
     total: 30,
     items: [
-      { productId: '5', quantity: 1, name: 'Golden Leaf Khat' },
+      { productId: '5', quantity: 1, name: 'قات الورقة الذهبية' },
     ],
   },
 ];
@@ -197,11 +197,11 @@ export type QuoteRequest = {
   productName: string;
   khatTypeName: string;
   quantity: number;
-  status: 'New' | 'Responded' | 'Accepted' | 'Cancelled';
+  status: 'جديد' | 'تم الرد' | 'مقبول' | 'ملغي';
   estimatedPrice: number;
   finalPrice?: number;
   messages: ChatMessage[];
-  deliveryOption: 'Delivery' | 'Pickup';
+  deliveryOption: 'توصيل' | 'استلام';
   deliveryAddress?: string;
 };
 
@@ -209,13 +209,13 @@ export const quoteRequests: QuoteRequest[] = [
   {
     id: 'QT-001',
     date: '2024-07-28',
-    customerName: 'Ahmed Al-Fulan',
-    productName: 'Royal Green Khat',
-    khatTypeName: 'Ro\'os',
+    customerName: 'أحمد الفلان',
+    productName: 'قات أخضر ملكي',
+    khatTypeName: 'رؤوس',
     quantity: 5,
-    status: 'New',
+    status: 'جديد',
     estimatedPrice: 150,
-    deliveryOption: 'Delivery',
+    deliveryOption: 'توصيل',
     deliveryAddress: 'شارع حدة، صنعاء، اليمن',
     messages: [
       { sender: 'Customer', message: 'مرحبًا، هل السعر قابل للتفاوض؟', timestamp: '2024-07-28T10:00:00Z' },
@@ -224,26 +224,26 @@ export const quoteRequests: QuoteRequest[] = [
   {
     id: 'QT-002',
     date: '2024-07-28',
-    customerName: 'Fatima Al-Saeed',
-    productName: 'Mountain Fresh Khat',
-    khatTypeName: 'Standard',
+    customerName: 'فاطمة السعيد',
+    productName: 'قات جبلي منعش',
+    khatTypeName: 'عادي',
     quantity: 10,
-    status: 'New',
+    status: 'جديد',
     estimatedPrice: 200,
-    deliveryOption: 'Pickup',
+    deliveryOption: 'استلام',
     messages: [],
   },
   {
     id: 'QT-003',
     date: '2024-07-27',
-    customerName: 'Youssef Al-Haddad',
-    productName: 'Golden Leaf Khat',
-    khatTypeName: 'Qatol',
+    customerName: 'يوسف الحداد',
+    productName: 'قات الورقة الذهبية',
+    khatTypeName: 'قطل',
     quantity: 3,
-    status: 'Responded',
+    status: 'تم الرد',
     estimatedPrice: 90,
     finalPrice: 85,
-    deliveryOption: 'Pickup',
+    deliveryOption: 'استلام',
     messages: [
         { sender: 'Customer', message: 'كم آخر السعر لهذه الكمية؟', timestamp: '2024-07-27T14:00:00Z' },
         { sender: 'Vendor', message: 'أهلاً بك. يمكنني أن أقدم لك سعرًا نهائيًا قدره 85 دولارًا.', timestamp: '2024-07-27T14:05:00Z' },
@@ -252,14 +252,14 @@ export const quoteRequests: QuoteRequest[] = [
    {
     id: 'QT-004',
     date: '2024-07-26',
-    customerName: 'Aisha Al-Amoudi',
-    productName: 'Royal Green Khat',
-    khatTypeName: 'Qatol',
+    customerName: 'عائشة العمودي',
+    productName: 'قات أخضر ملكي',
+    khatTypeName: 'قطل',
     quantity: 8,
-    status: 'Accepted',
+    status: 'مقبول',
     estimatedPrice: 200,
     finalPrice: 190,
-    deliveryOption: 'Delivery',
+    deliveryOption: 'توصيل',
     deliveryAddress: 'حي شميلة، صنعاء، اليمن',
     messages: [
         { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 190 دولارًا. في انتظار تأكيدك.', timestamp: '2024-07-26T09:30:00Z' },
@@ -269,13 +269,13 @@ export const quoteRequests: QuoteRequest[] = [
    {
     id: 'QT-005',
     date: '2024-07-25',
-    customerName: 'Khalid Al-Bakri',
-    productName: 'Hadrami White Khat',
-    khatTypeName: 'Ro\'os',
+    customerName: 'خالد البكري',
+    productName: 'قات أبيض حضرمي',
+    khatTypeName: 'رؤوس',
     quantity: 4,
-    status: 'Cancelled',
+    status: 'ملغي',
     estimatedPrice: 112,
-    deliveryOption: 'Pickup',
+    deliveryOption: 'استلام',
     messages: [],
   },
 ];
@@ -290,27 +290,27 @@ export type Faq = {
 export const faqs: Faq[] = [
   {
     id: 'faq1',
-    question: 'How long does delivery take?',
-    answer: 'Delivery times vary based on your location. In major cities, we aim for same-day delivery for orders placed before noon. For other areas, it may take 1-2 business days.',
+    question: 'كم من الوقت يستغرق التوصيل؟',
+    answer: 'تختلف أوقات التوصيل حسب موقعك. في المدن الرئيسية، نهدف إلى التوصيل في نفس اليوم للطلبات التي يتم تقديمها قبل الظهر. بالنسبة للمناطق الأخرى، قد يستغرق الأمر من يوم إلى يومي عمل.',
   },
   {
     id: 'faq2',
-    question: 'Is the payment process secure?',
-    answer: 'Yes, absolutely. We use industry-standard encryption and partner with trusted local mobile money providers to ensure your transactions are safe and secure.',
+    question: 'هل عملية الدفع آمنة؟',
+    answer: 'نعم، بكل تأكيد. نستخدم تشفيرًا قياسيًا في الصناعة ونتعاون مع مزودي خدمات الأموال عبر الهاتف المحمول الموثوق بهم لضمان أمان معاملاتك.',
   },
   {
     id: 'faq3',
-    question: 'How can I be sure of the khat quality?',
-    answer: 'We partner directly with reputable farms and vendors who are known for their high-quality products. Each vendor has a profile with user ratings and reviews to help you make an informed decision.',
+    question: 'كيف يمكنني التأكد من جودة القات؟',
+    answer: 'نحن نتعاون مباشرة مع المزارع والبائعين ذوي السمعة الطيبة المعروفين بمنتجاتهم عالية الجودة. لكل بائع ملف شخصي يحتوي على تقييمات ومراجعات المستخدمين لمساعدتك في اتخاذ قرار مستنير.',
   },
   {
     id: 'faq4',
-    question: 'What is your return policy?',
-    answer: 'Due to the perishable nature of khat, we do not accept returns. However, if you are unsatisfied with your order, please contact customer support within 3 hours of delivery, and we will do our best to resolve the issue.',
+    question: 'ما هي سياسة الإرجاع الخاصة بكم؟',
+    answer: 'نظرًا لطبيعة القات القابلة للتلف، فإننا لا نقبل المرتجعات. ومع ذلك، إذا لم تكن راضيًا عن طلبك، يرجى الاتصال بدعم العملاء في غضون 3 ساعات من التسليم، وسنبذل قصارى جهدنا لحل المشكلة.',
   },
   {
     id: 'faq5',
-    question: 'How do I become a vendor on the platform?',
-    answer: 'We are always looking to partner with quality vendors. Please navigate to the "Contact Us" section and send us a message with the subject "Vendor Inquiry". Our team will get back to you with the next steps.',
+    question: 'كيف أصبح بائعًا على المنصة؟',
+    answer: 'نحن نتطلع دائمًا إلى الشراكة مع البائعين المتميزين. يرجى الانتقال إلى قسم "اتصل بنا" وإرسال رسالة إلينا بعنوان "استفسار بائع". سيعود فريقنا إليك بالخطوات التالية.',
   }
 ];

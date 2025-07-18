@@ -13,8 +13,8 @@ export default function OrdersPage() {
           <div className="flex items-center gap-4">
             <Package2 className="h-8 w-8 text-primary" />
             <div>
-              <CardTitle className="font-headline">My Orders</CardTitle>
-              <CardDescription>View and manage your order history.</CardDescription>
+              <CardTitle className="font-headline">طلباتي</CardTitle>
+              <CardDescription>عرض وإدارة سجل طلباتك.</CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -22,10 +22,10 @@ export default function OrdersPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[100px]">Order ID</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Total</TableHead>
+                <TableHead className="w-[100px]">رقم الطلب</TableHead>
+                <TableHead>التاريخ</TableHead>
+                <TableHead>الحالة</TableHead>
+                <TableHead className="text-left">الإجمالي</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -37,15 +37,16 @@ export default function OrdersPage() {
                     <Badge
                       variant="outline"
                       className={cn(
-                        order.status === 'Delivered' && 'bg-green-100 text-green-800 border-green-200',
-                        order.status === 'Processing' && 'bg-amber-100 text-amber-800 border-amber-200',
-                        order.status === 'Cancelled' && 'bg-red-100 text-red-800 border-red-200'
+                        'capitalize',
+                        order.status === 'تم التوصيل' && 'bg-green-100 text-green-800 border-green-200',
+                        order.status === 'قيد التجهيز' && 'bg-amber-100 text-amber-800 border-amber-200',
+                        order.status === 'ملغي' && 'bg-red-100 text-red-800 border-red-200'
                       )}
                     >
                       {order.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-right">${order.total.toFixed(2)}</TableCell>
+                  <TableCell className="text-left">${order.total.toFixed(2)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

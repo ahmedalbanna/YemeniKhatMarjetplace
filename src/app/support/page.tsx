@@ -13,23 +13,23 @@ export default function SupportPage() {
     <div className="container mx-auto px-4 py-8">
       <header className="text-center mb-12">
         <LifeBuoy className="mx-auto h-16 w-16 text-primary mb-4" />
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground">Customer Support</h1>
-        <p className="text-lg text-muted-foreground mt-2">We&apos;re here to help. Find answers to your questions or get in touch with us.</p>
+        <h1 className="text-4xl font-headline font-bold text-primary-foreground">الدعم الفني</h1>
+        <p className="text-lg text-muted-foreground mt-2">نحن هنا للمساعدة. ابحث عن إجابات لأسئلتك أو تواصل معنا.</p>
       </header>
 
       <Tabs defaultValue="faq" className="w-full max-w-4xl mx-auto">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="faq">Frequently Asked Questions</TabsTrigger>
-          <TabsTrigger value="contact">Contact Us</TabsTrigger>
+          <TabsTrigger value="faq">الأسئلة الشائعة</TabsTrigger>
+          <TabsTrigger value="contact">اتصل بنا</TabsTrigger>
         </TabsList>
         <TabsContent value="faq">
           <Card>
             <CardHeader>
-              <CardTitle>FAQs</CardTitle>
-              <CardDescription>Find answers to the most common questions.</CardDescription>
+              <CardTitle>الأسئلة الشائعة</CardTitle>
+              <CardDescription>ابحث عن إجابات للأسئلة الأكثر شيوعاً.</CardDescription>
             </CardHeader>
             <CardContent>
-              <Accordion type="single" collapsible className="w-full">
+              <Accordion type="single" collapsible className="w-full text-right">
                 {faqs.map((faq) => (
                   <AccordionItem value={faq.id} key={faq.id}>
                     <AccordionTrigger>{faq.question}</AccordionTrigger>
@@ -43,31 +43,31 @@ export default function SupportPage() {
         <TabsContent value="contact">
           <Card>
             <CardHeader>
-              <CardTitle>Contact Us</CardTitle>
-              <CardDescription>Fill out the form below and we&apos;ll get back to you as soon as possible.</CardDescription>
+              <CardTitle>اتصل بنا</CardTitle>
+              <CardDescription>املأ النموذج أدناه وسنعود إليك في أقرب وقت ممكن.</CardDescription>
             </CardHeader>
             <CardContent>
-              <form className="space-y-4">
+              <form className="space-y-4 text-right">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Your name" />
+                    <Label htmlFor="name">الاسم</Label>
+                    <Input id="name" placeholder="اسمك" />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" type="email" placeholder="Your email" />
+                    <Label htmlFor="email">البريد الإلكتروني</Label>
+                    <Input id="email" type="email" placeholder="بريدك الإلكتروني" />
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="e.g., Order issue, question" />
+                  <Label htmlFor="subject">الموضوع</Label>
+                  <Input id="subject" placeholder="مثال: مشكلة في الطلب، استفسار" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" placeholder="Type your message here." className="min-h-[120px]" />
+                  <Label htmlFor="message">الرسالة</Label>
+                  <Textarea id="message" placeholder="اكتب رسالتك هنا." className="min-h-[120px]" />
                 </div>
                 <Button type="submit" className="w-full sm:w-auto">
-                  Send Message
+                  إرسال الرسالة
                 </Button>
               </form>
             </CardContent>

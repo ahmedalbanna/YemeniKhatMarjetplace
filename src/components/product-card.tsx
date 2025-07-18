@@ -24,8 +24,8 @@ export function ProductCard({ product }: ProductCardProps) {
             />
           </div>
         </CardHeader>
-        <CardContent className="p-4 flex-grow">
-          <Badge variant={product.category === 'Khat' ? 'default' : 'secondary'} className="mb-2 bg-primary/20 text-primary-foreground hover:bg-primary/30">{product.category}</Badge>
+        <CardContent className="p-4 flex-grow text-right">
+          <Badge variant={product.category === 'قات' ? 'default' : 'secondary'} className="mb-2 bg-primary/20 text-primary-foreground hover:bg-primary/30">{product.category}</Badge>
           <CardTitle className="text-lg font-semibold leading-tight mb-1 group-hover:text-primary transition-colors">{product.name}</CardTitle>
           <p className="text-sm text-muted-foreground">{product.vendor}</p>
         </CardContent>
