@@ -6,23 +6,56 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Send, User, Package, MessageSquare, MapPin, DollarSign, CornerDownLeft } from 'lucide-react';
+import { ArrowLeft, Send, User, Package, MessageSquare, MapPin, DollarSign, CornerDownLeft, Sparkles, Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useState } from 'react';
+import { suggestReply } from '@/ai/flows/suggest-reply-flow';
+import { useToast } from '@/hooks/use-toast';
 
 export default function QuoteDetailPage() {
     const params = useParams();
     const router = useRouter();
+    const { toast } = useToast();
     const quoteId = params.id;
+    
+    const [isSuggesting, setIsSuggesting] = useState(false);
+    const [message, setMessage] = useState('');
 
     const quote = quoteRequests.find(q => q.id === quoteId);
 
     if (!quote) {
         return notFound();
+    }
+    
+    const handleSuggestReply = async () => {
+        setIsSuggesting(true);
+        try {
+            const result = await suggestReply({
+                customerName: quote.customerName,
+                productName: quote.productName,
+                khatTypeName: quote.khatTypeName,
+                quantity: quote.quantity,
+                estimatedPrice: quote.estimatedPrice,
+                messages: quote.messages.map(m => ({ sender: m.sender, message: m.message })),
+            });
+            if (result.reply) {
+                setMessage(result.reply);
+            }
+        } catch (error) {
+            console.error("Error suggesting reply:", error);
+            toast({
+                variant: 'destructive',
+                title: 'خطأ',
+                description: 'حدث خطأ أثناء اقتراح الرد. الرجاء المحاولة مرة أخرى.',
+            });
+        } finally {
+            setIsSuggesting(false);
+        }
     }
 
     return (
@@ -72,10 +105,27 @@ export default function QuoteDetailPage() {
                                     ))}
                                 </div>
                             </ScrollArea>
-                            <div className="relative">
-                                <Textarea placeholder="اكتب رسالتك هنا..." className="pr-16" rows={3}/>
-                                <Button size="icon" className="absolute top-1/2 right-3 -translate-y-1/2">
-                                    <CornerDownLeft className="h-5 w-5" />
+                            <div className="space-y-2">
+                                <div className="relative">
+                                    <Textarea 
+                                        placeholder="اكتب رسالتك هنا..." 
+                                        className="pr-16" 
+                                        rows={3}
+                                        value={message}
+                                        onChange={(e) => setMessage(e.target.value)}
+                                    />
+                                    <Button size="icon" className="absolute top-1/2 right-3 -translate-y-1/2">
+                                        <CornerDownLeft className="h-5 w-5" />
+                                    </Button>
+                                </div>
+                                <Button 
+                                    variant="outline" 
+                                    size="sm"
+                                    onClick={handleSuggestReply}
+                                    disabled={isSuggesting}
+                                >
+                                    {isSuggesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Sparkles className="mr-2 h-4 w-4" />}
+                                    اقتراح رد
                                 </Button>
                             </div>
                         </CardContent>
