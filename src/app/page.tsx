@@ -10,41 +10,28 @@ import { MapPin, ShoppingBasket, Leaf } from 'lucide-react';
 export default function Home() {
   const [selectedGovernorate, setSelectedGovernorate] = useState('all');
   const [selectedMarket, setSelectedMarket] = useState('all');
-  const [selectedKhatType, setSelectedKhatType] = useState('all');
+  const [selectedKhatStrain, setSelectedKhatStrain] = useState('all');
 
   const markets = useMemo(() => {
     if (selectedGovernorate === 'all') return [];
     return governorates.find(g => g.id === selectedGovernorate)?.markets || [];
   }, [selectedGovernorate]);
 
-  const khatTypes: Omit<KhatType, 'price' | 'description'>[] = useMemo(() => {
-    const types = new Map<string, string>();
+  const khatStrains = useMemo(() => {
+    const strains = new Set<string>();
     allProducts.forEach(p => {
-        if (p.khatTypes) {
-            p.khatTypes.forEach(kt => {
-                if (!types.has(kt.id)) {
-                    types.set(kt.id, kt.name);
-                }
-            });
-        }
+        strains.add(p.strain);
     });
-    // Convert map to array and add 'all' option
-    const uniqueTypes = Array.from(types, ([id, name]) => ({ id, name }));
-    return uniqueTypes;
+    return Array.from(strains);
   }, []);
 
 
   const filteredProducts = allProducts.filter((product) => {
     const matchesGovernorate = selectedGovernorate === 'all' || product.governorateId === selectedGovernorate;
     const matchesMarket = selectedMarket === 'all' || product.marketId === selectedMarket;
+    const matchesKhatStrain = selectedKhatStrain === 'all' || product.strain === selectedKhatStrain;
     
-    const matchesKhatType = selectedKhatType === 'all' || 
-        (product.category === 'قات' && product.khatTypes?.some(kt => kt.id === selectedKhatType));
-    
-    // For non-khat products, khat type filter should not exclude them if khat type is not 'all'
-    const isAccessoryAndKhatTypeSelected = product.category === 'ملحقات' && selectedKhatType !== 'all';
-
-    return matchesGovernorate && matchesMarket && (matchesKhatType || isAccessoryAndKhatTypeSelected);
+    return matchesGovernorate && matchesMarket && matchesKhatStrain;
   });
 
   const handleGovernorateChange = (value: string) => {
@@ -94,14 +81,14 @@ export default function Home() {
 
           <div className="flex items-center gap-2">
             <Leaf className="h-5 w-5 text-muted-foreground" />
-            <Select value={selectedKhatType} onValueChange={setSelectedKhatType}>
+            <Select value={selectedKhatStrain} onValueChange={setSelectedKhatStrain}>
                 <SelectTrigger>
                     <SelectValue placeholder="اختر نوع القات" />
                 </SelectTrigger>
                 <SelectContent>
                     <SelectItem value="all">كل الأنواع</SelectItem>
-                    {khatTypes.map(kt => (
-                        <SelectItem key={kt.id} value={kt.id}>{kt.name}</SelectItem>
+                    {khatStrains.map(strain => (
+                        <SelectItem key={strain} value={strain}>{strain}</SelectItem>
                     ))}
                 </SelectContent>
             </Select>
@@ -122,3 +109,5 @@ export default function Home() {
     </div>
   );
 }
+
+    

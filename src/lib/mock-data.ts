@@ -1,6 +1,6 @@
 export type KhatType = {
   id: string;
-  name: 'الأرحبي' | 'الصعدي' | 'العنسي' | 'همداني';
+  name: 'بزغة' | 'رؤوس' | 'أميال' | 'عاقدات' | 'أبو ريشة صفراء';
   price: number;
   description: string;
 };
@@ -40,8 +40,9 @@ export const governorates: Governorate[] = [
 export type Product = {
   id: string;
   name: string;
-  category: 'قات' | 'ملحقات';
-  price: number; // Keep a base price for accessories or general display
+  strain: 'أرحبي' | 'صعدي' | 'عنسي' | 'همداني' | 'حضرمي';
+  category: 'قات';
+  price: number; // Base price for general display
   description: string;
   vendor: string;
   images: string[];
@@ -57,6 +58,7 @@ export const products: Product[] = [
   {
     id: '1',
     name: 'قات أرحبي فاخر',
+    strain: 'أرحبي',
     category: 'قات',
     price: 15000,
     description: 'تشكيلة فاخرة من أوراق القات الأرحبي الطازجة، تتميز بجودتها العالية وتأثيرها المميز. من أشهر مزارع أرحب.',
@@ -68,27 +70,15 @@ export const products: Product[] = [
     governorateId: 'sanaa',
     marketId: 'bab-al-yemen',
     khatTypes: [
-      { id: '1-1', name: 'الأرحبي', price: 15000, description: 'أوراق مختارة بعناية من منطقة أرحب.' },
-      { id: '1-2', name: 'همداني', price: 12000, description: 'نوعية ممتازة من همدان.' },
+      { id: '1-1', name: 'رؤوس', price: 18000, description: 'أفضل الرؤوس المختارة بعناية.' },
+      { id: '1-2', name: 'عاقدات', price: 15000, description: 'عاقدات طرية ذات جودة عالية.' },
+      { id: '1-3', name: 'أميال', price: 12000, description: 'أميال ممتازة للمستخدم اليومي.' },
     ],
-  },
-  {
-    id: '2',
-    name: 'مداعة تقليدية',
-    category: 'ملحقات',
-    price: 8000,
-    description: 'مداعة تقليدية مصنوعة بحرفية من الخشب المحلي وتتميز بنقوش معقدة. مثالية لتجربة سلسة.',
-    vendor: 'حرفيين صنعاء',
-    images: ['https://placehold.co/600x600', 'https://placehold.co/600x600'],
-    rating: 4.6,
-    reviews: 85,
-    dataAiHint: 'hookah pipe',
-    governorateId: 'sanaa',
-    marketId: 'bab-al-yemen',
   },
   {
     id: '3',
     name: 'قات صعدي',
+    strain: 'صعدي',
     category: 'قات',
     price: 18000,
     description: 'قات صعدي مقرمش، يتم حصاده يومياً من مزارع صعدة. خيار شائع لنكهته ورائحته القوية.',
@@ -100,26 +90,14 @@ export const products: Product[] = [
     governorateId: 'sanaa',
     marketId: 'shamlan',
     khatTypes: [
-        { id: '3-1', name: 'الصعدي', price: 18000, description: 'أوراق طازجة ومقرمشة من صعدة.' },
+        { id: '3-1', name: 'بزغة', price: 22000, description: 'بزغة صعدي نادرة وقوية المفعول.' },
+        { id: '3-2', name: 'رؤوس', price: 18000, description: 'رؤوس صعدي طازجة ومقرمشة.' },
     ],
-  },
-  {
-    id: '4',
-    name: 'تبغ بنكهة (معسل)',
-    category: 'ملحقات',
-    price: 2000,
-    description: 'مجموعة متنوعة من التبغ الفاخر بنكهات التفاح والنعناع والعنب. مغسول ثلاث مرات لدخان نقي ولذيذ.',
-    vendor: 'واردات عدن',
-    images: ['https://placehold.co/600x600', 'https://placehold.co/600x600'],
-    rating: 4.7,
-    reviews: 95,
-    dataAiHint: 'flavored tobacco',
-    governorateId: 'aden',
-    marketId: 'crater',
   },
   {
     id: '5',
     name: 'قات عنسي فاخر',
+    strain: 'عنسي',
     category: 'قات',
     price: 20000,
     description: 'نوع نادر ومطلوب من القات العنسي، يقدم تجربة فريدة وقوية. توفر محدود.',
@@ -131,26 +109,14 @@ export const products: Product[] = [
     governorateId: 'sanaa',
     marketId: 'bab-al-yemen',
     khatTypes: [
-      { id: '5-1', name: 'العنسي', price: 20000, description: 'أفضل أنواع القات العنسي.' },
+      { id: '5-1', name: 'رؤوس', price: 25000, description: 'أفضل أنواع القات العنسي الفاخر.' },
+      { id: '5-2', name: 'أبو ريشة صفراء', price: 20000, description: 'يتميز بلونه الأصفر وطعمه الفريد.' },
     ],
   },
   {
-    id: '6',
-    name: 'قارورة ماء محمولة',
-    category: 'ملحقات',
-    price: 3000,
-    description: 'قارورة ماء متينة ومعزولة للحفاظ على برودة الماء لساعات. ضرورية لأي جلسة قات. خالية من BPA.',
-    vendor: 'الحياة العصرية',
-    images: ['https://placehold.co/600x600'],
-    rating: 4.4,
-    reviews: 150,
-    dataAiHint: 'water bottle',
-    governorateId: 'aden',
-    marketId: 'crater',
-  },
-    {
     id: '7',
     name: 'قات أبيض حضرمي',
+    strain: 'حضرمي',
     category: 'قات',
     price: 10000,
     description: 'نوع خاص من منطقة حضرموت، معروف بلونه الفاتح وطعمه الحاد المميز. اختيار الخبراء.',
@@ -162,22 +128,9 @@ export const products: Product[] = [
     governorateId: 'hadhramaut',
     marketId: 'seiyun',
     khatTypes: [
-        { id: '7-1', name: 'همداني', price: 10000, description: 'تجربة حضرمية فريدة.' },
+        { id: '7-1', name: 'رؤوس', price: 12000, description: 'تجربة حضرمية فريدة.' },
+        { id: '7-2', name: 'أميال', price: 10000, description: 'جيد للاستخدام اليومي.' },
     ],
-  },
-  {
-    id: '8',
-    name: 'موقد فحم',
-    category: 'ملحقات',
-    price: 4000,
-    description: 'موقد فحم كهربائي يجهز الفحم في دقائق. آمن وسريع وفعال. لا غنى عنه لعشاق المداعة.',
-    vendor: 'حرفيين صنعاء',
-    images: ['https://placehold.co/600x600'],
-    rating: 4.8,
-    reviews: 112,
-    dataAiHint: 'charcoal burner',
-    governorateId: 'sanaa',
-    marketId: 'shamlan',
   },
 ];
 
@@ -257,7 +210,7 @@ export const quoteRequests: QuoteRequest[] = [
     date: '2024-07-28',
     customerName: 'أحمد الفلان',
     productName: 'قات أرحبي فاخر',
-    khatTypeName: 'الأرحبي',
+    khatTypeName: 'رؤوس',
     quantity: 5,
     status: 'جديد',
     estimatedPrice: 75000,
@@ -272,7 +225,7 @@ export const quoteRequests: QuoteRequest[] = [
     date: '2024-07-28',
     customerName: 'فاطمة السعيد',
     productName: 'قات صعدي',
-    khatTypeName: 'الصعدي',
+    khatTypeName: 'بزغة',
     quantity: 10,
     status: 'جديد',
     estimatedPrice: 180000,
@@ -284,7 +237,7 @@ export const quoteRequests: QuoteRequest[] = [
     date: '2024-07-27',
     customerName: 'يوسف الحداد',
     productName: 'قات عنسي فاخر',
-    khatTypeName: 'العنسي',
+    khatTypeName: 'رؤوس',
     quantity: 3,
     status: 'تم الرد',
     estimatedPrice: 60000,
@@ -300,7 +253,7 @@ export const quoteRequests: QuoteRequest[] = [
     date: '2024-07-26',
     customerName: 'عائشة العمودي',
     productName: 'قات أرحبي فاخر',
-    khatTypeName: 'الأرحبي',
+    khatTypeName: 'عاقدات',
     quantity: 8,
     status: 'مقبول',
     estimatedPrice: 120000,
@@ -317,7 +270,7 @@ export const quoteRequests: QuoteRequest[] = [
     date: '2024-07-25',
     customerName: 'خالد البكري',
     productName: 'قات أبيض حضرمي',
-    khatTypeName: 'همداني',
+    khatTypeName: 'أميال',
     quantity: 4,
     status: 'ملغي',
     estimatedPrice: 40000,
@@ -360,3 +313,5 @@ export const faqs: Faq[] = [
     answer: 'نحن نتطلع دائمًا إلى الشراكة مع البائعين المتميزين. يرجى الانتقال إلى قسم "اتصل بنا" وإرسال رسالة إلينا بعنوان "استفسار بائع". سيعود فريقنا إليك بالخطوات التالية.',
   }
 ];
+
+    
