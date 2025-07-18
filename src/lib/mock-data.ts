@@ -1,14 +1,22 @@
+export type KhatType = {
+  id: string;
+  name: 'Ro\'os' | 'Qatol' | 'Standard';
+  price: number;
+  description: string;
+};
+
 export type Product = {
   id: string;
   name: string;
   category: 'Khat' | 'Accessories';
-  price: number;
+  price: number; // Keep a base price for accessories or general display
   description: string;
   vendor: string;
   images: string[];
   rating: number;
   reviews: number;
   dataAiHint: string;
+  khatTypes?: KhatType[];
 };
 
 export const products: Product[] = [
@@ -23,6 +31,11 @@ export const products: Product[] = [
     rating: 4.8,
     reviews: 120,
     dataAiHint: 'green leaves',
+    khatTypes: [
+      { id: '1-1', name: 'Ro\'os', price: 30, description: 'The tender top shoots, highly prized.' },
+      { id: '1-2', name: 'Qatol', price: 25, description: 'Mid-level leaves, a balanced choice.' },
+      { id: '1-3', name: 'Standard', price: 20, description: 'Standard bundle for daily use.' },
+    ],
   },
   {
     id: '2',
@@ -47,6 +60,10 @@ export const products: Product[] = [
     rating: 4.5,
     reviews: 210,
     dataAiHint: 'khat leaves',
+    khatTypes: [
+        { id: '3-1', name: 'Ro\'os', price: 25, description: 'Crisp top shoots from the mountains.' },
+        { id: '3-2', name: 'Standard', price: 20, description: 'Great value mountain-fresh khat.' },
+    ],
   },
   {
     id: '4',
@@ -71,6 +88,10 @@ export const products: Product[] = [
     rating: 4.9,
     reviews: 75,
     dataAiHint: 'yellow leaves',
+    khatTypes: [
+      { id: '5-1', name: 'Ro\'os', price: 35, description: 'Exclusive golden top shoots.' },
+      { id: '5-2', name: 'Qatol', price: 30, description: 'Smooth and mellow golden leaves.' },
+    ],
   },
   {
     id: '6',
@@ -95,6 +116,10 @@ export const products: Product[] = [
     rating: 4.6,
     reviews: 98,
     dataAiHint: 'white leaves',
+    khatTypes: [
+        { id: '7-1', name: 'Ro\'os', price: 28, description: 'Sharp-tasting top shoots from Hadramaut.' },
+        { id: '7-2', name: 'Standard', price: 22, description: 'The classic Hadrami experience.' },
+    ],
   },
   {
     id: '8',
