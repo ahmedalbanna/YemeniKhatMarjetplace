@@ -30,7 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <p className="text-sm text-muted-foreground">{product.vendor}</p>
         </CardContent>
         <CardFooter className="p-4 pt-0 flex justify-between items-center">
-          <p className="text-xl font-bold text-primary-foreground">${product.price.toFixed(2)}</p>
+          <p className="text-xl font-bold text-primary-foreground">{product.price.toLocaleString()} ريال</p>
           <div className="flex items-center gap-1">
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
             <span className="text-sm text-muted-foreground">{product.rating}</span>

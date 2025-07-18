@@ -39,7 +39,7 @@ const prompt = ai.definePrompt({
   prompt: `You are an AI assistant for a vendor on a Yemeni Khat marketplace. Your goal is to help the vendor negotiate effectively and maintain a friendly, professional, and culturally appropriate tone (in Arabic).
 
 The negotiation is with a customer named {{{customerName}}}.
-The customer is asking about {{{quantity}}} units of {{{productName}}} (Type: {{{khatTypeName}}}), with an initial estimated price of \${{{estimatedPrice}}}.
+The customer is asking about {{{quantity}}} units of {{{productName}}} (Type: {{{khatTypeName}}}), with an initial estimated price of {{{estimatedPrice}}} Yemeni Rial.
 
 Conversation History:
 {{#each messages}}

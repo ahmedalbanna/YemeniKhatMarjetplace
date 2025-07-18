@@ -67,7 +67,7 @@ export default function VendorQuotesPage() {
                       {req.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-left">${req.estimatedPrice.toFixed(2)}</TableCell>
+                  <TableCell className="text-left">{req.estimatedPrice.toLocaleString()} ريال</TableCell>
                   <TableCell className="text-left">
                     <Button variant="outline" size="sm" asChild>
                        <Link href={`/dashboard/quotes/${req.id}`}>

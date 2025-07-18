@@ -46,7 +46,7 @@ export default function OrdersPage() {
                       {order.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-left">${order.total.toFixed(2)}</TableCell>
+                  <TableCell className="text-left">{order.total.toLocaleString()} ريال</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -61,7 +61,7 @@ export default function NegotiatePage() {
                                 <span>الكمية: <span className="font-semibold">{quantity} حبة</span></span>
                             </div>
                              <div className="text-right mt-2 font-bold text-primary">
-                                السعر التقديري: ${estimatedPrice.toFixed(2)}
+                                السعر التقديري: {estimatedPrice.toLocaleString()} ريال
                             </div>
                         </div>
                     </div>

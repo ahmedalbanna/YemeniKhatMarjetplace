@@ -139,13 +139,13 @@ export default function QuoteDetailPage() {
                         <CardContent className="grid sm:grid-cols-2 gap-4 items-end">
                             <div>
                                 <Label>السعر التقديري (من طرف العميل)</Label>
-                                <p className="text-2xl font-bold text-muted-foreground">${quote.estimatedPrice.toFixed(2)}</p>
+                                <p className="text-2xl font-bold text-muted-foreground">{quote.estimatedPrice.toLocaleString()} ريال</p>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="finalPrice" className="font-semibold">السعر النهائي المقترح</Label>
                                 <div className="relative">
-                                    <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                                    <Input id="finalPrice" type="number" placeholder="0.00" className="pl-10 text-lg font-bold" defaultValue={quote.finalPrice}/>
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 h-5 text-muted-foreground">ريال</span>
+                                    <Input id="finalPrice" type="number" placeholder="0" className="pl-12 text-lg font-bold" defaultValue={quote.finalPrice}/>
                                 </div>
                             </div>
                         </CardContent>

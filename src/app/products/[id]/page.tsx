@@ -106,7 +106,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
                            </div>
                         </div>
                         <div className="text-left">
-                             <p className="font-bold text-lg text-primary">${type.price.toFixed(2)}</p>
+                             <p className="font-bold text-lg text-primary">{type.price.toLocaleString()} ريال</p>
                              <RadioGroupItem value={type.id} id={type.id} className="mt-1 mr-auto" />
                         </div>
                       </Card>
@@ -117,7 +117,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             
             <div className="flex items-center justify-between bg-muted/50 p-4 rounded-lg mb-6">
                 <span className="text-lg font-medium text-muted-foreground">السعر المبدئي</span>
-                <p className="text-4xl font-bold text-primary">${displayPrice.toFixed(2)}</p>
+                <p className="text-4xl font-bold text-primary">{displayPrice.toLocaleString()} ريال</p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
