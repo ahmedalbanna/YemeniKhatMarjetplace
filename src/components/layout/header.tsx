@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Leaf, User, Package2 } from 'lucide-react';
+import { Menu, Leaf, User, Package2, ClipboardList } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -91,6 +91,7 @@ export function Header() {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild><Link href="/orders"><Package2 className="mr-2 h-4 w-4" />Orders</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/dashboard/quotes"><ClipboardList className="mr-2 h-4 w-4" />Vendor Dashboard</Link></DropdownMenuItem>
               <DropdownMenuItem asChild><Link href="/support">Support</Link></DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild><Link href="/login">Login</Link></DropdownMenuItem>

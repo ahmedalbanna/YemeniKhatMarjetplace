@@ -184,6 +184,74 @@ export const orders: Order[] = [
   },
 ];
 
+export type QuoteRequest = {
+  id: string;
+  date: string;
+  customerName: string;
+  productName: string;
+  khatTypeName: string;
+  quantity: number;
+  status: 'New' | 'Responded' | 'Accepted' | 'Cancelled';
+  estimatedPrice: number;
+  finalPrice?: number;
+};
+
+export const quoteRequests: QuoteRequest[] = [
+  {
+    id: 'QT-001',
+    date: '2024-07-28',
+    customerName: 'Ahmed Al-Fulan',
+    productName: 'Royal Green Khat',
+    khatTypeName: 'Ro\'os',
+    quantity: 5,
+    status: 'New',
+    estimatedPrice: 150,
+  },
+  {
+    id: 'QT-002',
+    date: '2024-07-28',
+    customerName: 'Fatima Al-Saeed',
+    productName: 'Mountain Fresh Khat',
+    khatTypeName: 'Standard',
+    quantity: 10,
+    status: 'New',
+    estimatedPrice: 200,
+  },
+  {
+    id: 'QT-003',
+    date: '2024-07-27',
+    customerName: 'Youssef Al-Haddad',
+    productName: 'Golden Leaf Khat',
+    khatTypeName: 'Qatol',
+    quantity: 3,
+    status: 'Responded',
+    estimatedPrice: 90,
+    finalPrice: 85,
+  },
+   {
+    id: 'QT-004',
+    date: '2024-07-26',
+    customerName: 'Aisha Al-Amoudi',
+    productName: 'Royal Green Khat',
+    khatTypeName: 'Qatol',
+    quantity: 8,
+    status: 'Accepted',
+    estimatedPrice: 200,
+    finalPrice: 190,
+  },
+   {
+    id: 'QT-005',
+    date: '2024-07-25',
+    customerName: 'Khalid Al-Bakri',
+    productName: 'Hadrami White Khat',
+    khatTypeName: 'Ro\'os',
+    quantity: 4,
+    status: 'Cancelled',
+    estimatedPrice: 112,
+  },
+];
+
+
 export type Faq = {
   id: string;
   question: string;
