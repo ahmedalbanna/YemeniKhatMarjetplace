@@ -200,7 +200,7 @@ export type QuoteRequest = {
   estimatedPrice: number;
   finalPrice?: number;
   messages: ChatMessage[];
-  deliveryOption: 'توصيل' | 'استلام';
+  deliveryOption: 'Delivery' | 'Pickup';
   deliveryAddress?: string;
 };
 
@@ -214,7 +214,7 @@ export const quoteRequests: QuoteRequest[] = [
     quantity: 5,
     status: 'جديد',
     estimatedPrice: 75000,
-    deliveryOption: 'توصيل',
+    deliveryOption: 'Delivery',
     deliveryAddress: 'شارع حدة، صنعاء، اليمن',
     messages: [
       { sender: 'Customer', message: 'مرحبًا، هل السعر قابل للتفاوض؟', timestamp: '2024-07-28T10:00:00Z' },
@@ -229,7 +229,7 @@ export const quoteRequests: QuoteRequest[] = [
     quantity: 10,
     status: 'جديد',
     estimatedPrice: 180000,
-    deliveryOption: 'استلام',
+    deliveryOption: 'Pickup',
     messages: [],
   },
   {
@@ -242,7 +242,7 @@ export const quoteRequests: QuoteRequest[] = [
     status: 'تم الرد',
     estimatedPrice: 60000,
     finalPrice: 58000,
-    deliveryOption: 'استلام',
+    deliveryOption: 'Pickup',
     messages: [
         { sender: 'Customer', message: 'كم آخر السعر لهذه الكمية؟', timestamp: '2024-07-27T14:00:00Z' },
         { sender: 'Vendor', message: 'أهلاً بك. يمكنني أن أقدم لك سعرًا نهائيًا قدره 58000 ريال.', timestamp: '2024-07-27T14:05:00Z' },
@@ -258,7 +258,7 @@ export const quoteRequests: QuoteRequest[] = [
     status: 'مقبول',
     estimatedPrice: 120000,
     finalPrice: 115000,
-    deliveryOption: 'توصيل',
+    deliveryOption: 'Delivery',
     deliveryAddress: 'حي شميلة، صنعاء، اليمن',
     messages: [
         { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 115000 ريال. في انتظار تأكيدك.', timestamp: '2024-07-26T09:30:00Z' },
@@ -274,7 +274,7 @@ export const quoteRequests: QuoteRequest[] = [
     quantity: 4,
     status: 'ملغي',
     estimatedPrice: 40000,
-    deliveryOption: 'استلام',
+    deliveryOption: 'Pickup',
     messages: [],
   },
 ];
@@ -313,5 +313,3 @@ export const faqs: Faq[] = [
     answer: 'نحن نتطلع دائمًا إلى الشراكة مع البائعين المتميزين. يرجى الانتقال إلى قسم "اتصل بنا" وإرسال رسالة إلينا بعنوان "استفسار بائع". سيعود فريقنا إليك بالخطوات التالية.',
   }
 ];
-
-    
