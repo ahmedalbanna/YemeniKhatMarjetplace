@@ -1,22 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ProductCard } from '@/components/product-card';
-import { products as allProducts } from '@/lib/mock-data';
+import { products as allProducts, governorates, KhatType } from '@/lib/mock-data';
 import type { Product } from '@/lib/mock-data';
-import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search } from 'lucide-react';
+import { MapPin, ShoppingBasket, Leaf } from 'lucide-react';
 
 export default function Home() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [category, setCategory] = useState('all');
+  const [selectedGovernorate, setSelectedGovernorate] = useState('all');
+  const [selectedMarket, setSelectedMarket] = useState('all');
+  const [selectedKhatType, setSelectedKhatType] = useState('all');
+
+  const markets = useMemo(() => {
+    if (selectedGovernorate === 'all') return [];
+    return governorates.find(g => g.id === selectedGovernorate)?.markets || [];
+  }, [selectedGovernorate]);
+
+  const khatTypes: Omit<KhatType, 'price' | 'description'>[] = useMemo(() => {
+    const types = new Map<string, string>();
+    allProducts.forEach(p => {
+        if (p.khatTypes) {
+            p.khatTypes.forEach(kt => {
+                if (!types.has(kt.id)) {
+                    types.set(kt.id, kt.name);
+                }
+            });
+        }
+    });
+    // Convert map to array and add 'all' option
+    const uniqueTypes = Array.from(types, ([id, name]) => ({ id, name }));
+    return uniqueTypes;
+  }, []);
+
 
   const filteredProducts = allProducts.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = category === 'all' || product.category === category;
-    return matchesSearch && matchesCategory;
+    const matchesGovernorate = selectedGovernorate === 'all' || product.governorateId === selectedGovernorate;
+    const matchesMarket = selectedMarket === 'all' || product.marketId === selectedMarket;
+    
+    const matchesKhatType = selectedKhatType === 'all' || 
+        (product.category === 'قات' && product.khatTypes?.some(kt => kt.id === selectedKhatType));
+    
+    // For non-khat products, khat type filter should not exclude them if khat type is not 'all'
+    const isAccessoryAndKhatTypeSelected = product.category === 'ملحقات' && selectedKhatType !== 'all';
+
+    return matchesGovernorate && matchesMarket && (matchesKhatType || isAccessoryAndKhatTypeSelected);
   });
+
+  const handleGovernorateChange = (value: string) => {
+    setSelectedGovernorate(value);
+    setSelectedMarket('all'); // Reset market when governorate changes
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -26,27 +60,52 @@ export default function Home() {
       </header>
 
       <div className="mb-8 p-4 bg-card rounded-lg shadow-md">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-grow">
-            <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="ابحث عن منتجات..."
-              className="pr-10 w-full"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          
+          <div className="flex items-center gap-2">
+            <MapPin className="h-5 w-5 text-muted-foreground" />
+            <Select value={selectedGovernorate} onValueChange={handleGovernorateChange}>
+              <SelectTrigger>
+                <SelectValue placeholder="اختر المحافظة" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">كل المحافظات</SelectItem>
+                {governorates.map(gov => (
+                  <SelectItem key={gov.id} value={gov.id}>{gov.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={category} onValueChange={setCategory}>
-            <SelectTrigger className="w-full md:w-[180px]">
-              <SelectValue placeholder="جميع الفئات" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">جميع الفئات</SelectItem>
-              <SelectItem value="قات">قات</SelectItem>
-              <SelectItem value="ملحقات">ملحقات</SelectItem>
-            </SelectContent>
-          </Select>
+
+          <div className="flex items-center gap-2">
+            <ShoppingBasket className="h-5 w-5 text-muted-foreground" />
+             <Select value={selectedMarket} onValueChange={setSelectedMarket} disabled={selectedGovernorate === 'all'}>
+              <SelectTrigger>
+                <SelectValue placeholder="اختر السوق" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">كل الأسواق</SelectItem>
+                {markets.map(market => (
+                   <SelectItem key={market.id} value={market.id}>{market.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Leaf className="h-5 w-5 text-muted-foreground" />
+            <Select value={selectedKhatType} onValueChange={setSelectedKhatType}>
+                <SelectTrigger>
+                    <SelectValue placeholder="اختر نوع القات" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="all">كل الأنواع</SelectItem>
+                    {khatTypes.map(kt => (
+                        <SelectItem key={kt.id} value={kt.id}>{kt.name}</SelectItem>
+                    ))}
+                </SelectContent>
+            </Select>
+          </div>
         </div>
       </div>
 

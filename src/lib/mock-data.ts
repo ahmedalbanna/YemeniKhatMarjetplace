@@ -5,6 +5,38 @@ export type KhatType = {
   description: string;
 };
 
+export type Governorate = {
+  id: string;
+  name: string;
+  markets: { id: string; name: string }[];
+};
+
+export const governorates: Governorate[] = [
+  { 
+    id: 'sanaa', 
+    name: 'صنعاء', 
+    markets: [
+      { id: 'bab-al-yemen', name: 'سوق باب اليمن' },
+      { id: 'shamlan', name: 'سوق شملان' },
+    ] 
+  },
+  { 
+    id: 'aden', 
+    name: 'عدن', 
+    markets: [
+      { id: 'crater', name: 'سوق كريتر' },
+    ] 
+  },
+  {
+    id: 'hadhramaut',
+    name: 'حضرموت',
+    markets: [
+        { id: 'seiyun', name: 'سوق سيئون' }
+    ]
+  }
+];
+
+
 export type Product = {
   id: string;
   name: string;
@@ -16,6 +48,8 @@ export type Product = {
   rating: number;
   reviews: number;
   dataAiHint: string;
+  governorateId: string; 
+  marketId: string; 
   khatTypes?: KhatType[];
 };
 
@@ -31,6 +65,8 @@ export const products: Product[] = [
     rating: 4.8,
     reviews: 120,
     dataAiHint: 'green leaves',
+    governorateId: 'sanaa',
+    marketId: 'bab-al-yemen',
     khatTypes: [
       { id: '1-1', name: 'رؤوس', price: 30, description: 'البراعم العلوية الطرية، ذات قيمة عالية.' },
       { id: '1-2', name: 'قطل', price: 25, description: 'أوراق من المستوى المتوسط، خيار متوازن.' },
@@ -48,6 +84,8 @@ export const products: Product[] = [
     rating: 4.6,
     reviews: 85,
     dataAiHint: 'hookah pipe',
+    governorateId: 'sanaa',
+    marketId: 'bab-al-yemen',
   },
   {
     id: '3',
@@ -60,9 +98,11 @@ export const products: Product[] = [
     rating: 4.5,
     reviews: 210,
     dataAiHint: 'khat leaves',
+    governorateId: 'sanaa',
+    marketId: 'shamlan',
     khatTypes: [
         { id: '3-1', name: 'رؤوس', price: 25, description: 'براعم علوية مقرمشة من الجبال.' },
-        { id: '3-2', name: 'عادي', price: 20, description: 'قات جبلي منعش بقيمة رائعة.' },
+        { id: '1-3', name: 'عادي', price: 20, description: 'قات جبلي منعش بقيمة رائعة.' }, // Re-using id for 'عادي'
     ],
   },
   {
@@ -76,6 +116,8 @@ export const products: Product[] = [
     rating: 4.7,
     reviews: 95,
     dataAiHint: 'flavored tobacco',
+    governorateId: 'aden',
+    marketId: 'crater',
   },
   {
     id: '5',
@@ -88,9 +130,11 @@ export const products: Product[] = [
     rating: 4.9,
     reviews: 75,
     dataAiHint: 'yellow leaves',
+    governorateId: 'sanaa',
+    marketId: 'bab-al-yemen',
     khatTypes: [
       { id: '5-1', name: 'رؤوس', price: 35, description: 'براعم علوية ذهبية حصرية.' },
-      { id: '5-2', name: 'قطل', price: 30, description: 'أوراق ذهبية ناعمة ومعتدلة.' },
+      { id: '1-2', name: 'قطل', price: 30, description: 'أوراق ذهبية ناعمة ومعتدلة.' }, // Re-using id for 'قطل'
     ],
   },
   {
@@ -104,6 +148,8 @@ export const products: Product[] = [
     rating: 4.4,
     reviews: 150,
     dataAiHint: 'water bottle',
+    governorateId: 'aden',
+    marketId: 'crater',
   },
     {
     id: '7',
@@ -116,9 +162,11 @@ export const products: Product[] = [
     rating: 4.6,
     reviews: 98,
     dataAiHint: 'white leaves',
+    governorateId: 'hadhramaut',
+    marketId: 'seiyun',
     khatTypes: [
         { id: '7-1', name: 'رؤوس', price: 28, description: 'براعم علوية ذات طعم حاد من حضرموت.' },
-        { id: '7-2', name: 'عادي', price: 22, description: 'التجربة الحضرمية الكلاسيكية.' },
+        { id: '1-3', name: 'عادي', price: 22, description: 'التجربة الحضرمية الكلاسيكية.' }, // Re-using id for 'عادي'
     ],
   },
   {
@@ -132,6 +180,8 @@ export const products: Product[] = [
     rating: 4.8,
     reviews: 112,
     dataAiHint: 'charcoal burner',
+    governorateId: 'sanaa',
+    marketId: 'shamlan',
   },
 ];
 
