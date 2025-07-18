@@ -1,5 +1,5 @@
-# Firebase Studio
+# Yemeni Khat Marketplace
 
-This is a NextJS starter in Firebase Studio.
+This is a Next.js application for a marketplace to buy and sell khat and accessories.
 
-To get started, take a look at src/app/page.tsx.
+Built with Next.js, TypeScript, and Tailwind CSS.
