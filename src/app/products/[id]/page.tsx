@@ -1,3 +1,4 @@
+
 'use client';
 
 import { notFound, useRouter, useParams } from 'next/navigation';
@@ -8,7 +9,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Star, Minus, Plus, MessageSquareQuote, Leaf } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
@@ -21,6 +22,12 @@ export default function ProductDetailPage() {
   const productId = params.id as string;
 
   const product = products.find((p) => p.id === productId);
+
+  useEffect(() => {
+    if (product?.khatTypes && product.khatTypes.length > 0 && !selectedType) {
+      setSelectedType(product.khatTypes[0]);
+    }
+  }, [product, selectedType]);
 
   if (!product) {
     notFound();
@@ -46,13 +53,6 @@ export default function ProductDetailPage() {
         router.push(`/negotiate?${query}`);
     }
   }
-  
-  // Set initial selection
-  useState(() => {
-    if (product?.khatTypes && product.khatTypes.length > 0) {
-      setSelectedType(product.khatTypes[0]);
-    }
-  });
 
   const displayPrice = selectedType ? selectedType.price : product.price;
 
@@ -88,7 +88,7 @@ export default function ProductDetailPage() {
             </div>
             <p className="text-muted-foreground leading-relaxed mb-6">{product.description}</p>
 
-            {product.khatTypes && (
+            {product.khatTypes && product.khatTypes.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">اختر الفئة (حسب الحبة)</h3>
                  <RadioGroup
