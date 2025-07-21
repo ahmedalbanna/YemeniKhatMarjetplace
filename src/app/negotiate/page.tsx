@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useSearchParams, notFound, useRouter } from 'next/navigation';
@@ -7,20 +8,23 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, Check, Send, MapPin } from 'lucide-react';
+import { ArrowLeft, Check, Send, MapPin, Loader2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function NegotiatePage() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { toast } = useToast();
     const productId = searchParams.get('productId');
     const typeId = searchParams.get('typeId');
     const quantity = searchParams.get('quantity');
 
     const [deliveryOption, setDeliveryOption] = useState('pickup');
     const [address, setAddress] = useState('');
+    const [isLocating, setIsLocating] = useState(false);
 
     const product = products.find(p => p.id === productId);
     const khatType = product?.khatTypes?.find(t => t.id === typeId);
@@ -28,6 +32,41 @@ export default function NegotiatePage() {
     if (!product || !khatType || !quantity) {
         return notFound();
     }
+
+    const handleGetLocation = () => {
+        if (!navigator.geolocation) {
+             toast({
+                variant: 'destructive',
+                title: 'خطأ',
+                description: 'خدمة تحديد المواقع غير مدعومة في متصفحك.',
+            });
+            return;
+        }
+
+        setIsLocating(true);
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                // For a real app, you would use a reverse geocoding service here.
+                // For this prototype, we'll just show the coordinates.
+                setAddress(`تم تحديد الموقع بنجاح. خط العرض: ${latitude.toFixed(4)}, خط الطول: ${longitude.toFixed(4)}`);
+                setIsLocating(false);
+                toast({
+                    title: 'نجاح',
+                    description: 'تم تحديد موقعك بنجاح.',
+                });
+            },
+            (error) => {
+                setIsLocating(false);
+                toast({
+                    variant: 'destructive',
+                    title: 'خطأ في تحديد الموقع',
+                    description: 'يرجى التأكد من تمكين إذن الوصول إلى الموقع في متصفحك.',
+                });
+                console.error("Geolocation error:", error);
+            }
+        );
+    };
 
     const estimatedPrice = khatType.price * parseInt(quantity);
 
@@ -96,8 +135,8 @@ export default function NegotiatePage() {
                             <Label htmlFor="address">عنوان التوصيل</Label>
                              <div className="relative">
                                 <Textarea id="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="أدخل عنوانك هنا أو استخدم الخريطة..." />
-                                <Button variant="ghost" size="icon" className="absolute top-2 right-2">
-                                    <MapPin className="h-5 w-5" />
+                                <Button variant="ghost" size="icon" className="absolute top-2 right-2" onClick={handleGetLocation} disabled={isLocating}>
+                                    {isLocating ? <Loader2 className="h-5 w-5 animate-spin" /> : <MapPin className="h-5 w-5" />}
                                 </Button>
                             </div>
                         </div>
