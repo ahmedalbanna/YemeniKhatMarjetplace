@@ -1,6 +1,6 @@
 'use client';
 
-import { notFound, useRouter } from 'next/navigation';
+import { notFound, useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { products, KhatType } from '@/lib/mock-data';
 import { Button } from '@/components/ui/button';
@@ -13,12 +13,14 @@ import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 
-export default function ProductDetailPage({ params }: { params: { id: string } }) {
+export default function ProductDetailPage() {
   const [quantity, setQuantity] = useState(1);
   const [selectedType, setSelectedType] = useState<KhatType | null>(null);
   const router = useRouter();
+  const params = useParams();
+  const productId = params.id as string;
 
-  const product = products.find((p) => p.id === params.id);
+  const product = products.find((p) => p.id === productId);
 
   if (!product) {
     notFound();
@@ -140,5 +142,3 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
     </div>
   );
 }
-
-    
