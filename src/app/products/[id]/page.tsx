@@ -54,7 +54,7 @@ export default function ProductDetailPage() {
     }
   }
 
-  const displayPrice = selectedType ? selectedType.price : product.price;
+  const displayPrice = selectedType ? selectedType.price * quantity : product.price * quantity;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
             )}
             
             <div className="flex items-center justify-between bg-muted/50 p-4 rounded-lg mb-6">
-                <span className="text-lg font-medium text-muted-foreground">السعر المبدئي</span>
+                <span className="text-lg font-medium text-muted-foreground">السعر الإجمالي التقديري</span>
                 <p className="text-4xl font-bold text-primary">{displayPrice.toLocaleString()} ريال</p>
             </div>
 
