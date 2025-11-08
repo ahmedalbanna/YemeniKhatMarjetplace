@@ -138,7 +138,7 @@ export type Order = {
   id: string;
   quoteId: string;
   date: string;
-  status: 'تم التوصيل' | 'قيد التجهيز' | 'بانتظار الموافقة' | 'ملغي';
+  status: 'تم التوصيل' | 'قيد التجهيز' | 'بانتظار الموافقة' | 'ملغي' | 'قيد التفاوض';
   total: number;
 };
 
@@ -163,6 +163,13 @@ export const orders: Order[] = [
     date: '2024-07-28',
     status: 'بانتظار الموافقة',
     total: 18000,
+  },
+    {
+    id: 'ORD-006',
+    quoteId: 'QT-006',
+    date: '2024-07-29',
+    status: 'قيد التفاوض',
+    total: 11000,
   },
 ];
 
@@ -204,16 +211,18 @@ export const quoteRequests: QuoteRequest[] = [
     ],
   },
   {
-    id: 'QT-002',
-    date: '2024-07-28',
+    id: 'QT-006',
+    date: '2024-07-29',
     customerName: 'فاطمة السعيد',
     productName: 'قات صعدي',
     khatTypeName: 'بزغة',
     quantity: 50,
-    status: 'بانتظار موافقة البائع',
+    status: 'قيد التفاوض',
     estimatedPrice: 11000, // 50g * 220
     deliveryOption: 'Pickup',
-    messages: [],
+    messages: [
+      { sender: 'Vendor', message: 'أهلاً بك، تم قبول طلبك مبدئياً. بخصوص السعر، ما هو السعر الذي يناسبك؟', timestamp: '2024-07-29T11:05:00Z' }
+    ],
   },
   {
     id: 'QT-003',
@@ -222,7 +231,7 @@ export const quoteRequests: QuoteRequest[] = [
     productName: 'قات عنسي فاخر',
     khatTypeName: 'رؤوس',
     quantity: 80,
-    status: 'قيد التفاوض',
+    status: 'مقبول',
     estimatedPrice: 20000, // 80g * 250
     finalPrice: 19500,
     deliveryOption: 'Pickup',

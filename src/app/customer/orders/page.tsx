@@ -16,12 +16,14 @@ export default function OrdersPage() {
             return 'bg-green-100 text-green-800 border-green-200';
         case 'بانتظار الموافقة':
             return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        case 'قيد التفاوض':
+            return 'bg-blue-100 text-blue-800 border-blue-200';
         case 'قيد التجهيز':
             return 'bg-blue-100 text-blue-800 border-blue-200';
         case 'ملغي':
             return 'bg-red-100 text-red-800 border-red-200';
         default:
-            return '';
+             return 'bg-purple-100 text-purple-800 border-purple-200';
     }
   };
 
