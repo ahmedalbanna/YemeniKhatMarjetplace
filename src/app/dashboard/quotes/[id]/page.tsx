@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { ArrowLeft, Send, User, Package, MessageSquare, MapPin, DollarSign, CornerDownLeft, Sparkles, Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { User, Package, MessageSquare, MapPin, DollarSign, CornerDownLeft, Sparkles, Loader2, CheckCircle, XCircle, Send } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
@@ -61,11 +61,7 @@ export default function QuoteDetailPage() {
     const showNegotiation = quote.status === 'قيد التفاوض' || quote.status === 'تم الرد' || quote.status === 'مقبول';
 
     return (
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-            <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                العودة إلى الطلبات
-            </Button>
+        <div className="max-w-4xl mx-auto">
             <div className="grid lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-6">
                     {/* Chat/Negotiation Card */}

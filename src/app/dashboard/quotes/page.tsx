@@ -27,16 +27,15 @@ export default function VendorQuotesPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="space-y-8">
+       <div>
+            <h1 className="text-3xl font-bold font-headline">طلبات عروض الأسعار</h1>
+            <p className="text-muted-foreground">عرض وإدارة طلبات عروض الأسعار الواردة من العملاء.</p>
+        </div>
       <Card>
         <CardHeader>
-          <div className="flex items-center gap-4">
-            <ClipboardList className="h-8 w-8 text-primary" />
-            <div>
-              <CardTitle className="font-headline">طلبات عروض الأسعار</CardTitle>
-              <CardDescription>عرض وإدارة طلبات عروض الأسعار الواردة من العملاء.</CardDescription>
-            </div>
-          </div>
+            <CardTitle>جميع الطلبات</CardTitle>
+            <CardDescription>لديك {quoteRequests.length} طلب في المجموع.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>

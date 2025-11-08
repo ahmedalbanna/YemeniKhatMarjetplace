@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Leaf, User, Package2, ClipboardList } from 'lucide-react';
+import { Menu, Leaf, User, Package2, ClipboardList, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -25,6 +25,10 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  const isDashboard = pathname.startsWith('/dashboard');
+  if (isDashboard) return null;
+
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link
@@ -93,7 +97,7 @@ export function Header() {
               <DropdownMenuLabel>حسابي</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild><Link href="/orders"><Package2 className="ml-2 h-4 w-4" />طلباتي</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/dashboard/quotes"><ClipboardList className="ml-2 h-4 w-4" />لوحة تحكم البائع</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/dashboard"><LayoutDashboard className="ml-2 h-4 w-4" />لوحة تحكم البائع</Link></DropdownMenuItem>
               <DropdownMenuItem asChild><Link href="/support">الدعم</Link></DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild><Link href="/login">تسجيل الدخول</Link></DropdownMenuItem>
