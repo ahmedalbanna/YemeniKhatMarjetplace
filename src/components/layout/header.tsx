@@ -10,8 +10,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { useAuth } from '@/contexts/auth-context';
 import { cn } from '@/lib/utils';
-import { LayoutDashboard, Leaf, Menu, PersonStandingIcon, User } from 'lucide-react';
+import { LayoutDashboard, Leaf, LogOut, Menu, PersonStandingIcon, User } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
@@ -24,6 +25,7 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   const isVendor = pathname.startsWith('/vendor');
   if (isVendor) return null;
@@ -94,14 +96,43 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>حسابي</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild><Link href="/customer"><PersonStandingIcon className="ml-2 h-4 w-4" />المشتري</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/vendor"><LayoutDashboard className="ml-2 h-4 w-4" />البائع</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/marketplace/support">الدعم</Link></DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild><Link href="/auth/login">تسجيل الدخول</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/auth/register">إنشاء حساب</Link></DropdownMenuItem>
+              {user ? (
+                <>
+                  <DropdownMenuLabel>
+                    {user.firstName} {user.lastName}
+                    <div className="text-xs text-muted-foreground font-normal">{user.email}</div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href={user.role === 'customer' ? '/customer' : '/vendor'}>
+                      {user.role === 'customer' ? (
+                        <>
+                          <PersonStandingIcon className="ml-2 h-4 w-4" />
+                          لوحة تحكم المشتري
+                        </>
+                      ) : (
+                        <>
+                          <LayoutDashboard className="ml-2 h-4 w-4" />
+                          لوحة تحكم البائع
+                        </>
+                      )}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/marketplace/support">الدعم</Link></DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={logout}>
+                    <LogOut className="ml-2 h-4 w-4" />
+                    تسجيل الخروج
+                  </DropdownMenuItem>
+                </>
+              ) : (
+                <>
+                  <DropdownMenuLabel>مرحبا بكم</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild><Link href="/auth/login">تسجيل الدخول</Link></DropdownMenuItem>
+                  <DropdownMenuItem asChild><Link href="/auth/register">إنشاء حساب</Link></DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

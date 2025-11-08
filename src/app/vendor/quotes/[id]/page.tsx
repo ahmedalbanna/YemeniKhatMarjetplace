@@ -1,28 +1,26 @@
 'use client';
 
-import { notFound, useParams, useRouter } from 'next/navigation';
-import { quoteRequests } from '@/lib/mock-data';
+import { suggestReply } from '@/ai/flows/suggest-reply-flow';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { User, Package, MessageSquare, MapPin, DollarSign, CornerDownLeft, Sparkles, Loader2, CheckCircle, XCircle, Send } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useState } from 'react';
-import { suggestReply } from '@/ai/flows/suggest-reply-flow';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-
+import { orders, quoteRequests } from '@/lib/mock-data';
+import { cn } from '@/lib/utils';
+import { CheckCircle, CornerDownLeft, Loader2, MapPin, Package, Send, Sparkles, User, XCircle } from 'lucide-react';
+import { notFound, useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
 export default function QuoteDetailPage() {
     const params = useParams();
     const router = useRouter();
     const { toast } = useToast();
     const quoteId = params.id;
-    
+
     const [isSuggesting, setIsSuggesting] = useState(false);
     const [message, setMessage] = useState('');
 
@@ -31,7 +29,76 @@ export default function QuoteDetailPage() {
     if (!quote) {
         return notFound();
     }
-    
+
+    const [finalPrice, setFinalPrice] = useState(quote.finalPrice || quote.estimatedPrice || 0);
+
+    const handleAcceptQuote = () => {
+        quote.status = 'قيد التفاوض';
+        toast({
+            title: 'تم قبول الطلب',
+            description: 'تم قبول الطلب وبدء التفاوض مع العميل.',
+        });
+        router.refresh();
+    };
+
+    const handleRejectQuote = () => {
+        quote.status = 'ملغي';
+        toast({
+            title: 'تم رفض الطلب',
+            description: 'تم رفض الطلب.',
+        });
+        setTimeout(() => {
+            router.push('/vendor/quotes');
+        }, 1500);
+    };
+
+    const handleSendFinalPrice = () => {
+        quote.finalPrice = finalPrice;
+        quote.status = 'مقبول';
+        quote.messages.push({
+            sender: 'Vendor',
+            message: `تم تحديد السعر النهائي بـ ${finalPrice.toLocaleString()} ريال. في انتظار تأكيدك.`,
+            timestamp: new Date().toISOString()
+        });
+
+        // Create order when quote is accepted
+        const newOrder = {
+            id: `ORD-${Date.now()}`,
+            quoteId: quote.id,
+            date: new Date().toISOString().split('T')[0],
+            status: 'بانتظار الموافقة' as const,
+            total: finalPrice,
+        };
+        orders.push(newOrder);
+
+        toast({
+            title: 'تم إرسال السعر النهائي',
+            description: 'تم إرسال السعر النهائي للعميل وإنشاء الطلب.',
+        });
+        router.refresh();
+    };
+
+    const handleSendMessage = () => {
+        if (!message.trim()) return;
+
+        quote.messages.push({
+            sender: 'Vendor',
+            message: message,
+            timestamp: new Date().toISOString()
+        });
+
+        if (quote.status === 'بانتظار موافقة البائع') {
+            quote.status = 'قيد التفاوض';
+        }
+
+        setMessage('');
+        toast({
+            title: 'تم إرسال الرسالة',
+            description: 'تم إرسال رسالتك للعميل.',
+        });
+        router.refresh();
+    };
+
     const handleSuggestReply = async () => {
         setIsSuggesting(true);
         try {
@@ -65,7 +132,7 @@ export default function QuoteDetailPage() {
             <div className="grid lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-6">
                     {/* Chat/Negotiation Card */}
-                    { showNegotiation ? (
+                    {showNegotiation ? (
                         <Card>
                             <CardHeader>
                                 <div className="flex justify-between items-start">
@@ -106,32 +173,37 @@ export default function QuoteDetailPage() {
                                 </ScrollArea>
                                 <div className="space-y-2">
                                     <div className="relative">
-                                        <Textarea 
-                                            placeholder="اكتب رسالتك هنا..." 
-                                            className="pr-16" 
+                                        <Textarea
+                                            placeholder="اكتب رسالتك هنا..."
+                                            className="pr-16"
                                             rows={3}
                                             value={message}
                                             onChange={(e) => setMessage(e.target.value)}
                                         />
-                                        <Button size="icon" className="absolute top-1/2 right-3 -translate-y-1/2">
+                                        <Button
+                                            size="icon"
+                                            className="absolute top-1/2 right-3 -translate-y-1/2"
+                                            onClick={handleSendMessage}
+                                            disabled={!message.trim()}
+                                        >
                                             <CornerDownLeft className="h-5 w-5" />
                                         </Button>
                                     </div>
-                                    <Button 
-                                        variant="outline" 
+                                    <Button
+                                        variant="outline"
                                         size="sm"
                                         onClick={handleSuggestReply}
                                         disabled={isSuggesting}
                                     >
-                                        {isSuggesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Sparkles className="mr-2 h-4 w-4" />}
+                                        {isSuggesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                                         اقتراح رد
                                     </Button>
                                 </div>
                             </CardContent>
                         </Card>
-                     ) : (
+                    ) : (
                         <Card>
-                             <CardHeader>
+                            <CardHeader>
                                 <CardTitle>مراجعة الطلب المبدئي</CardTitle>
                                 <CardDescription>الطلب في انتظار موافقتك لبدء التفاوض.</CardDescription>
                             </CardHeader>
@@ -139,20 +211,20 @@ export default function QuoteDetailPage() {
                                 <p className="text-sm text-muted-foreground">راجع تفاصيل الطلب أدناه. بمجرد الموافقة، يمكنك البدء في التواصل مع العميل.</p>
                             </CardContent>
                             <CardFooter className="flex justify-end gap-2">
-                                <Button variant="destructive">
-                                    <XCircle className="ml-2 h-4 w-4"/>
+                                <Button variant="destructive" onClick={handleRejectQuote}>
+                                    <XCircle className="ml-2 h-4 w-4" />
                                     رفض الطلب
                                 </Button>
-                                <Button>
-                                    <CheckCircle className="ml-2 h-4 w-4"/>
+                                <Button onClick={handleAcceptQuote}>
+                                    <CheckCircle className="ml-2 h-4 w-4" />
                                     الموافقة وبدء التفاوض
                                 </Button>
                             </CardFooter>
                         </Card>
-                     )}
+                    )}
 
                     {/* Pricing Section */}
-                    { showNegotiation && (
+                    {showNegotiation && (
                         <Card className="bg-muted/30">
                             <CardHeader className="pb-4">
                                 <CardTitle className="text-lg font-bold">التسعير</CardTitle>
@@ -166,13 +238,20 @@ export default function QuoteDetailPage() {
                                     <Label htmlFor="finalPrice" className="font-semibold">السعر النهائي المقترح</Label>
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 h-5 text-muted-foreground">ريال</span>
-                                        <Input id="finalPrice" type="number" placeholder="0" className="pl-12 text-lg font-bold" defaultValue={quote.finalPrice}/>
+                                        <Input
+                                            id="finalPrice"
+                                            type="number"
+                                            placeholder="0"
+                                            className="pl-12 text-lg font-bold"
+                                            value={finalPrice}
+                                            onChange={(e) => setFinalPrice(parseInt(e.target.value) || 0)}
+                                        />
                                     </div>
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-end pt-4">
-                                <Button size="lg">
-                                    <Send className="mr-2 h-5 w-5"/>
+                                <Button size="lg" onClick={handleSendFinalPrice} disabled={finalPrice <= 0}>
+                                    <Send className="mr-2 h-5 w-5" />
                                     إرسال عرض السعر النهائي للعميل
                                 </Button>
                             </CardFooter>
@@ -181,10 +260,10 @@ export default function QuoteDetailPage() {
                 </div>
 
                 <div className="lg:col-span-1 space-y-6">
-                     {/* Customer Info */}
+                    {/* Customer Info */}
                     <Card>
                         <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
-                            <User className="h-6 w-6 text-primary"/>
+                            <User className="h-6 w-6 text-primary" />
                             <CardTitle className="text-lg font-bold">العميل</CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -192,11 +271,11 @@ export default function QuoteDetailPage() {
                             <p className="text-sm text-muted-foreground">طلب بتاريخ: {new Date(quote.date).toLocaleDateString()}</p>
                         </CardContent>
                     </Card>
-                    
+
                     {/* Product Info */}
                     <Card>
                         <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
-                            <Package className="h-6 w-6 text-primary"/>
+                            <Package className="h-6 w-6 text-primary" />
                             <CardTitle className="text-lg font-bold">المنتج المطلوب</CardTitle>
                         </CardHeader>
                         <CardContent>
@@ -212,14 +291,14 @@ export default function QuoteDetailPage() {
                     {/* Delivery Info */}
                     <Card>
                         <CardHeader className="flex-row items-center gap-3 space-y-0 pb-2">
-                            <MapPin className="h-6 w-6 text-primary"/>
+                            <MapPin className="h-6 w-6 text-primary" />
                             <CardTitle className="text-lg font-bold">معلومات الاستلام</CardTitle>
                         </CardHeader>
                         <CardContent>
-                             <p className="font-semibold">{quote.deliveryOption === 'Delivery' ? 'توصيل إلى المنزل' : 'استلام من المتجر'}</p>
-                             {quote.deliveryAddress && (
+                            <p className="font-semibold">{quote.deliveryOption === 'Delivery' ? 'توصيل إلى المنزل' : 'استلام من المتجر'}</p>
+                            {quote.deliveryAddress && (
                                 <p className="text-sm text-muted-foreground p-2 bg-muted/50 rounded-md mt-2">{quote.deliveryAddress}</p>
-                             )}
+                            )}
                         </CardContent>
                     </Card>
                 </div>

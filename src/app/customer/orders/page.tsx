@@ -64,7 +64,7 @@ export default function OrdersPage() {
                   <TableCell className="text-left font-mono">{order.total.toLocaleString()} ريال</TableCell>
                    <TableCell className="text-left">
                     <Button variant="outline" size="sm" asChild>
-                       <Link href={`/dashboard/quotes/${order.quoteId}`}>
+                       <Link href={`/customer/orders/${order.id}`}>
                          <ExternalLink className="ml-2 h-4 w-4" />
                          عرض التفاصيل
                        </Link>

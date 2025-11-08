@@ -15,6 +15,7 @@ import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
 
 type OrderItem = {
   typeId: string;
@@ -24,6 +25,7 @@ type OrderItem = {
 export default function NegotiatePage() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { toast } = useToast();
     const productId = searchParams.get('productId');
     const itemsParam = searchParams.get('items');
     
@@ -224,7 +226,22 @@ export default function NegotiatePage() {
                         </div>
                     </CardContent>
                     <CardFooter className="flex flex-col gap-4">
-                        <Button size="lg" className="w-full" disabled={deliveryOption === 'Delivery' && address.length <= 5}>
+                        <Button 
+                            size="lg" 
+                            className="w-full" 
+                            disabled={deliveryOption === 'Delivery' && address.length <= 5}
+                            onClick={() => {
+                                // In a real app, this would create a quote request
+                                // For now, we'll simulate it and redirect
+                                toast({
+                                    title: 'تم إرسال الطلب',
+                                    description: 'تم إرسال طلبك إلى البائع بنجاح. سيتم إشعارك عند الموافقة.',
+                                });
+                                setTimeout(() => {
+                                    router.push('/customer/orders');
+                                }, 1500);
+                            }}
+                        >
                             <Send className="mr-2 h-5 w-5"/>
                             إرسال الطلب إلى البائع
                         </Button>

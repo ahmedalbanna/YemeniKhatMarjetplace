@@ -4,11 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { quoteRequests } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
-import { ClipboardList, ExternalLink } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export default function VendorQuotesPage() {
-  
+
   const getStatusVariant = (status: string) => {
     switch (status) {
       case 'بانتظار موافقة البائع':
@@ -28,14 +28,14 @@ export default function VendorQuotesPage() {
 
   return (
     <div className="space-y-8">
-       <div>
-            <h1 className="text-3xl font-bold font-headline">طلبات عروض الأسعار</h1>
-            <p className="text-muted-foreground">عرض وإدارة طلبات عروض الأسعار الواردة من العملاء.</p>
-        </div>
+      <div>
+        <h1 className="text-3xl font-bold font-headline">طلبات عروض الأسعار</h1>
+        <p className="text-muted-foreground">عرض وإدارة طلبات عروض الأسعار الواردة من العملاء.</p>
+      </div>
       <Card>
         <CardHeader>
-            <CardTitle>جميع الطلبات</CardTitle>
-            <CardDescription>لديك {quoteRequests.length} طلب في المجموع.</CardDescription>
+          <CardTitle>جميع الطلبات</CardTitle>
+          <CardDescription>لديك {quoteRequests.length} طلب في المجموع.</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -74,10 +74,10 @@ export default function VendorQuotesPage() {
                   <TableCell className="text-left">{req.estimatedPrice.toLocaleString()} ريال</TableCell>
                   <TableCell className="text-left">
                     <Button variant="outline" size="sm" asChild>
-                       <Link href={`/dashboard/quotes/${req.id}`}>
-                         <ExternalLink className="ml-2 h-4 w-4" />
-                         عرض والتفاوض
-                       </Link>
+                      <Link href={`/vendor/quotes/${req.id}`}>
+                        <ExternalLink className="ml-2 h-4 w-4" />
+                        عرض والتفاوض
+                      </Link>
                     </Button>
                   </TableCell>
                 </TableRow>

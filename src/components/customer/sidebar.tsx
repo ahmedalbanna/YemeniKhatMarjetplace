@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/sidebar';
 import { BarChart3, ClipboardList, Home, Leaf, LogOut, Package, Settings } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuth } from '@/contexts/auth-context';
 
 const navLinks = [
     { href: '/customer', label: 'نظرة عامة', icon: Home },
@@ -22,6 +23,13 @@ const navLinks = [
 
 export function CustomerSidebar() {
     const pathname = usePathname();
+    const { logout } = useAuth();
+    const router = useRouter();
+
+    const handleLogout = () => {
+        logout();
+        router.push('/');
+    };
 
     return (
         <>
@@ -61,11 +69,9 @@ export function CustomerSidebar() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton tooltip="تسجيل الخروج" asChild>
-                            <Link href="/login">
-                                <LogOut />
-                                <span>تسجيل الخروج</span>
-                            </Link>
+                        <SidebarMenuButton tooltip="تسجيل الخروج" onClick={handleLogout}>
+                            <LogOut />
+                            <span>تسجيل الخروج</span>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

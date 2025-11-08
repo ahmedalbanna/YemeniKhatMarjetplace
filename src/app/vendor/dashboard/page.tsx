@@ -87,7 +87,7 @@ export default function DashboardOverviewPage() {
                 <CardDescription>آخر طلبات عروض الأسعار التي تلقيتها.</CardDescription>
             </div>
             <Button variant="outline" size="sm" asChild>
-                <Link href="/dashboard/quotes">
+                <Link href="/vendor/quotes">
                     عرض الكل
                 </Link>
             </Button>
@@ -128,7 +128,7 @@ export default function DashboardOverviewPage() {
                   </TableCell>
                   <TableCell className="text-left">
                     <Button variant="outline" size="sm" asChild>
-                       <Link href={`/dashboard/quotes/${req.id}`}>
+                       <Link href={`/vendor/quotes/${req.id}`}>
                          <ExternalLink className="ml-2 h-4 w-4" />
                          عرض والتفاوض
                        </Link>

@@ -343,3 +343,45 @@ export const transactions: Transaction[] = [
     description: 'دفع للطلب X-485'
   },
 ];
+
+export type User = {
+  id: string;
+  email: string;
+  password: string; // In real app, this would be hashed
+  firstName: string;
+  lastName: string;
+  role: 'customer' | 'vendor';
+  phone?: string;
+  address?: string;
+};
+
+export const mockUsers: User[] = [
+  {
+    id: 'user-1',
+    email: 'customer@example.com',
+    password: 'password123',
+    firstName: 'أحمد',
+    lastName: 'الفلان',
+    role: 'customer',
+    phone: '+967 777 123 456',
+    address: 'شارع حدة، صنعاء، اليمن'
+  },
+  {
+    id: 'user-2',
+    email: 'vendor@example.com',
+    password: 'password123',
+    firstName: 'مزارع',
+    lastName: 'السعيد',
+    role: 'vendor',
+    phone: '+967 777 789 012'
+  },
+  {
+    id: 'user-3',
+    email: 'test@example.com',
+    password: 'test123',
+    firstName: 'يوسف',
+    lastName: 'السعيد',
+    role: 'customer',
+    phone: '+967 777 345 678'
+  }
+];
