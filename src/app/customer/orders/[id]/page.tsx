@@ -6,13 +6,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { orders, quoteRequests, products } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Package, MapPin, Calendar, DollarSign, CheckCircle, CreditCard } from 'lucide-react';
+import { ArrowLeft, Package, MapPin, Calendar, DollarSign, CheckCircle, CreditCard, ShieldCheck } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, useParams, useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 export default function OrderDetailPage() {
     const params = useParams();
     const router = useRouter();
+    const { toast } = useToast();
     const orderId = params.id as string;
 
     const order = orders.find(o => o.id === orderId);
@@ -22,6 +24,15 @@ export default function OrderDetailPage() {
     if (!order || !quote) {
         return notFound();
     }
+
+    const handleConfirmReceipt = () => {
+        order.status = 'تم التوصيل';
+        toast({
+            title: 'تم تأكيد الاستلام',
+            description: 'شكراً لك! تم تحديث حالة الطلب إلى "تم التوصيل".',
+        });
+        router.refresh();
+    };
 
     const getStatusVariant = (status: string) => {
         switch (status) {
@@ -69,13 +80,15 @@ export default function OrderDetailPage() {
                                 <p className="font-semibold">{new Date(order.date).toLocaleDateString('ar-SA')}</p>
                             </div>
                         </div>
-                        <div className="flex items-start gap-3">
-                            <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div>
-                                <p className="text-sm text-muted-foreground">المبلغ الإجمالي</p>
-                                <p className="font-semibold text-lg">{order.total.toLocaleString()} ريال</p>
+                        {order.status !== 'بانتظار الموافقة' && (
+                             <div className="flex items-start gap-3">
+                                <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                <div>
+                                    <p className="text-sm text-muted-foreground">المبلغ الإجمالي</p>
+                                    <p className="font-semibold text-lg">{order.total.toLocaleString()} ريال</p>
+                                </div>
                             </div>
-                        </div>
+                        )}
                     </div>
 
                     <Separator />
@@ -113,28 +126,32 @@ export default function OrderDetailPage() {
                         </div>
                     </div>
 
-                    <Separator />
-
-                    <div>
-                        <h3 className="font-semibold mb-3">ملخص السعر</h3>
-                        <div className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                                <span className="text-muted-foreground">السعر المبدئي</span>
-                                <span>{quote.estimatedPrice.toLocaleString()} ريال</span>
-                            </div>
-                            {quote.finalPrice && quote.finalPrice !== quote.estimatedPrice && (
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">السعر النهائي</span>
-                                    <span className="font-semibold">{quote.finalPrice.toLocaleString()} ريال</span>
-                                </div>
-                            )}
+                    {order.status !== 'بانتظار الموافقة' && (
+                        <>
                             <Separator />
-                            <div className="flex justify-between text-lg font-bold">
-                                <span>المجموع</span>
-                                <span>{order.total.toLocaleString()} ريال</span>
+                            <div>
+                                <h3 className="font-semibold mb-3">ملخص السعر</h3>
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-sm">
+                                        <span className="text-muted-foreground">السعر المبدئي</span>
+                                        <span>{quote.estimatedPrice.toLocaleString()} ريال</span>
+                                    </div>
+                                    {quote.finalPrice && quote.finalPrice !== quote.estimatedPrice && (
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-muted-foreground">السعر النهائي المتفق عليه</span>
+                                            <span className="font-semibold">{quote.finalPrice.toLocaleString()} ريال</span>
+                                        </div>
+                                    )}
+                                    <Separator />
+                                    <div className="flex justify-between text-lg font-bold">
+                                        <span>المجموع</span>
+                                        <span>{order.total.toLocaleString()} ريال</span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </>
+                    )}
+
 
                     {order.status === 'تم التوصيل' && (
                         <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
@@ -144,19 +161,36 @@ export default function OrderDetailPage() {
                     )}
 
                     {order.status === 'بانتظار الموافقة' && (
-                        <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
-                            <p className="text-sm text-blue-800">هذا الطلب في انتظار الدفع. يرجى إتمام عملية الدفع للمتابعة.</p>
-                            <Button asChild className="w-full">
-                                <Link href={`/customer/payment?amount=${order.total}&orderId=${order.id}`}>
-                                    <CreditCard className="mr-2 h-4 w-4" />
-                                    إتمام الدفع
-                                </Link>
+                        <>
+                             <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
+                                <p className="text-sm text-blue-800">
+                                    طلبك في انتظار موافقة البائع. سيتم إشعارك عند قبول الطلب لبدء التفاوض وتحديد السعر النهائي.
+                                </p>
+                            </div>
+
+                            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg space-y-3">
+                                <p className="text-sm text-yellow-800">هذا الطلب في انتظار الدفع. يرجى إتمام عملية الدفع للمتابعة.</p>
+                                <Button asChild className="w-full">
+                                    <Link href={`/customer/payment?amount=${order.total}&orderId=${order.id}`}>
+                                        <CreditCard className="mr-2 h-4 w-4" />
+                                        إتمام الدفع
+                                    </Link>
+                                </Button>
+                            </div>
+                        </>
+                    )}
+
+                    {order.status === 'قيد التجهيز' && (
+                         <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-3">
+                            <p className="text-sm text-green-800">تم الدفع بنجاح. البائع يقوم بتجهيز طلبك الآن.</p>
+                            <Button className="w-full" onClick={handleConfirmReceipt}>
+                                <ShieldCheck className="mr-2 h-4 w-4" />
+                                تأكيد استلام الطلب
                             </Button>
-                        </div>
+                         </div>
                     )}
                 </CardContent>
             </Card>
         </div>
     );
 }
-
