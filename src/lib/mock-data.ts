@@ -194,7 +194,7 @@ export type QuoteRequest = {
   productName: string;
   khatTypeName: string;
   quantity: number;
-  status: 'جديد' | 'تم الرد' | 'مقبول' | 'ملغي';
+  status: 'بانتظار موافقة البائع' | 'قيد التفاوض' | 'تم الرد' | 'مقبول' | 'ملغي';
   estimatedPrice: number;
   finalPrice?: number;
   messages: ChatMessage[];
@@ -209,13 +209,13 @@ export const quoteRequests: QuoteRequest[] = [
     customerName: 'أحمد الفلان',
     productName: 'قات أرحبي فاخر',
     khatTypeName: 'رؤوس',
-    quantity: 5,
-    status: 'جديد',
-    estimatedPrice: 75000,
+    quantity: 100, // in grams
+    status: 'بانتظار موافقة البائع',
+    estimatedPrice: 18000, // 100g * 180
     deliveryOption: 'Delivery',
     deliveryAddress: 'شارع حدة، صنعاء، اليمن',
     messages: [
-      { sender: 'Customer', message: 'مرحبًا، هل السعر قابل للتفاوض؟', timestamp: '2024-07-28T10:00:00Z' },
+      { sender: 'Customer', message: 'مرحبًا، هذا طلبي المبدئي، هل السعر قابل للتفاوض لكمية أكبر؟', timestamp: '2024-07-28T10:00:00Z' },
     ],
   },
   {
@@ -224,9 +224,9 @@ export const quoteRequests: QuoteRequest[] = [
     customerName: 'فاطمة السعيد',
     productName: 'قات صعدي',
     khatTypeName: 'بزغة',
-    quantity: 10,
-    status: 'جديد',
-    estimatedPrice: 180000,
+    quantity: 50,
+    status: 'بانتظار موافقة البائع',
+    estimatedPrice: 11000, // 50g * 220
     deliveryOption: 'Pickup',
     messages: [],
   },
@@ -236,14 +236,14 @@ export const quoteRequests: QuoteRequest[] = [
     customerName: 'يوسف الحداد',
     productName: 'قات عنسي فاخر',
     khatTypeName: 'رؤوس',
-    quantity: 3,
-    status: 'تم الرد',
-    estimatedPrice: 60000,
-    finalPrice: 58000,
+    quantity: 80,
+    status: 'قيد التفاوض',
+    estimatedPrice: 20000, // 80g * 250
+    finalPrice: 19500,
     deliveryOption: 'Pickup',
     messages: [
         { sender: 'Customer', message: 'كم آخر السعر لهذه الكمية؟', timestamp: '2024-07-27T14:00:00Z' },
-        { sender: 'Vendor', message: 'أهلاً بك. يمكنني أن أقدم لك سعرًا نهائيًا قدره 58000 ريال.', timestamp: '2024-07-27T14:05:00Z' },
+        { sender: 'Vendor', message: 'أهلاً بك. يمكنني أن أقدم لك سعرًا نهائيًا قدره 19500 ريال.', timestamp: '2024-07-27T14:05:00Z' },
     ],
   },
    {
@@ -252,14 +252,14 @@ export const quoteRequests: QuoteRequest[] = [
     customerName: 'عائشة العمودي',
     productName: 'قات أرحبي فاخر',
     khatTypeName: 'عاقدات',
-    quantity: 8,
+    quantity: 200,
     status: 'مقبول',
-    estimatedPrice: 120000,
-    finalPrice: 115000,
+    estimatedPrice: 30000, // 200g * 150
+    finalPrice: 29000,
     deliveryOption: 'Delivery',
     deliveryAddress: 'حي شميلة، صنعاء، اليمن',
     messages: [
-        { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 115000 ريال. في انتظار تأكيدك.', timestamp: '2024-07-26T09:30:00Z' },
+        { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 29000 ريال. في انتظار تأكيدك.', timestamp: '2024-07-26T09:30:00Z' },
         { sender: 'Customer', message: 'ممتاز، موافقة. متى يمكنني توقع التوصيل؟', timestamp: '2024-07-26T09:35:00Z' },
     ],
   },
@@ -269,9 +269,9 @@ export const quoteRequests: QuoteRequest[] = [
     customerName: 'خالد البكري',
     productName: 'قات أبيض حضرمي',
     khatTypeName: 'أميال',
-    quantity: 4,
+    quantity: 150,
     status: 'ملغي',
-    estimatedPrice: 40000,
+    estimatedPrice: 15000, // 150g * 100
     deliveryOption: 'Pickup',
     messages: [],
   },

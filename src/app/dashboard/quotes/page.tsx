@@ -8,11 +8,22 @@ import { ClipboardList, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 
 export default function VendorQuotesPage() {
-  const statusTranslations = {
-    'New': 'جديد',
-    'Responded': 'تم الرد',
-    'Accepted': 'مقبول',
-    'Cancelled': 'ملغي'
+  
+  const getStatusVariant = (status: string) => {
+    switch (status) {
+      case 'بانتظار موافقة البائع':
+        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'قيد التفاوض':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'تم الرد':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'مقبول':
+        return 'bg-green-100 text-green-800 border-green-200';
+      case 'ملغي':
+        return 'bg-red-100 text-red-800 border-red-200';
+      default:
+        return '';
+    }
   };
 
   return (
@@ -35,7 +46,7 @@ export default function VendorQuotesPage() {
                 <TableHead>العميل</TableHead>
                 <TableHead>المنتج</TableHead>
                 <TableHead>الحالة</TableHead>
-                <TableHead className="text-left">السعر التقديري</TableHead>
+                <TableHead className="text-left">السعر المبدئي</TableHead>
                 <TableHead className="text-left">الإجراءات</TableHead>
               </TableRow>
             </TableHeader>
@@ -50,19 +61,13 @@ export default function VendorQuotesPage() {
                   <TableCell>
                     <div>{req.productName}</div>
                     <div className="text-sm text-muted-foreground">
-                      {req.khatTypeName} (x{req.quantity})
+                      {req.khatTypeName} (x{req.quantity} جرام)
                     </div>
                   </TableCell>
                   <TableCell>
                     <Badge
                       variant="outline"
-                      className={cn(
-                        'capitalize',
-                        req.status === 'جديد' && 'bg-blue-100 text-blue-800 border-blue-200',
-                        req.status === 'تم الرد' && 'bg-yellow-100 text-yellow-800 border-yellow-200',
-                        req.status === 'مقبول' && 'bg-green-100 text-green-800 border-green-200',
-                        req.status === 'ملغي' && 'bg-red-100 text-red-800 border-red-200'
-                      )}
+                      className={cn('capitalize', getStatusVariant(req.status))}
                     >
                       {req.status}
                     </Badge>
@@ -72,7 +77,7 @@ export default function VendorQuotesPage() {
                     <Button variant="outline" size="sm" asChild>
                        <Link href={`/dashboard/quotes/${req.id}`}>
                          <ExternalLink className="ml-2 h-4 w-4" />
-                         عرض والرد
+                         عرض والتفاوض
                        </Link>
                     </Button>
                   </TableCell>
