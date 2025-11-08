@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -10,11 +10,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { orders, quoteRequests, products } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
-import { ArrowLeft, Package, MapPin, Calendar, DollarSign, CheckCircle, CreditCard, ShieldCheck, CornerDownLeft, Sparkles, Loader2 } from 'lucide-react';
+import { ArrowLeft, Package, MapPin, Calendar, DollarSign, CheckCircle, CreditCard, ShieldCheck, CornerDownLeft, Sparkles, Loader2, XCircle } from 'lucide-react';
 import Link from 'next/link';
 import { notFound, useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { suggestReply } from '@/ai/flows/suggest-reply-flow';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 export default function OrderDetailPage() {
     const params = useParams();
@@ -44,6 +45,21 @@ export default function OrderDetailPage() {
         });
         router.refresh();
     };
+    
+    const handleCancelOrder = () => {
+        order.status = 'ملغي';
+        if (quote) {
+            quote.status = 'ملغي';
+        }
+        toast({
+            variant: 'destructive',
+            title: 'تم إلغاء الطلب',
+            description: 'لقد قمت بإلغاء هذا الطلب.',
+        });
+        setTimeout(() => {
+            router.push('/customer/orders');
+        }, 1500);
+    }
 
     const getStatusVariant = (status: string) => {
         switch (status) {
@@ -113,13 +129,41 @@ export default function OrderDetailPage() {
     const isPendingApproval = order.status === 'بانتظار الموافقة';
     const isProcessing = order.status === 'قيد التجهيز';
     const isDelivered = order.status === 'تم التوصيل';
-    
+    const isCancelled = order.status === 'ملغي';
+    const canCancel = order.status === 'بانتظار الموافقة' || order.status === 'قيد التفاوض' || order.status === 'مقبول';
+
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl space-y-6">
-            <Button variant="ghost" onClick={() => router.back()} className="mb-4">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                العودة إلى الطلبات
-            </Button>
+            <div className="flex justify-between items-center mb-4">
+                <Button variant="ghost" onClick={() => router.back()}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    العودة إلى الطلبات
+                </Button>
+                {canCancel && (
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive-outline">
+                                <XCircle className="ml-2 h-4 w-4" />
+                                إلغاء الطلب
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>هل أنت متأكد؟</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    هل تريد بالتأكيد إلغاء هذا الطلب؟ لا يمكن التراجع عن هذا الإجراء.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>تراجع</AlertDialogCancel>
+                                <AlertDialogAction onClick={handleCancelOrder} className={buttonVariants({ variant: "destructive" })}>
+                                    نعم، قم بالإلغاء
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                )}
+            </div>
 
             <Card>
                 <CardHeader>
@@ -137,183 +181,192 @@ export default function OrderDetailPage() {
                     </div>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                        <div className="flex items-start gap-3">
-                            <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
-                            <div>
-                                <p className="text-sm text-muted-foreground">تاريخ الطلب</p>
-                                <p className="font-semibold">{new Date(order.date).toLocaleDateString('ar-SA')}</p>
-                            </div>
+                    {isCancelled ? (
+                         <div className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
+                            <XCircle className="h-5 w-5 text-red-600" />
+                            <p className="text-sm text-red-800">تم إلغاء هذا الطلب.</p>
                         </div>
-                        {!isPendingApproval && (
-                             <div className="flex items-start gap-3">
-                                <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
-                                <div>
-                                    <p className="text-sm text-muted-foreground">المبلغ الإجمالي</p>
-                                    <p className="font-semibold text-lg">{order.total.toLocaleString()} ريال</p>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    <Separator />
-
-                    {product && (
-                        <div>
-                            <h3 className="font-semibold mb-3 flex items-center gap-2">
-                                <Package className="h-5 w-5" />
-                                المنتج
-                            </h3>
-                            <div className="p-4 bg-muted/50 rounded-lg space-y-2">
-                                <p className="font-semibold">{quote.productName}</p>
-                                <p className="text-sm text-muted-foreground">
-                                    النوع: {quote.khatTypeName} | الكمية: {quote.quantity} جرام
-                                </p>
-                                <p className="text-sm text-muted-foreground">البائع: {product.vendor}</p>
-                            </div>
-                        </div>
-                    )}
-
-                    <Separator />
-
-                    <div>
-                        <h3 className="font-semibold mb-3 flex items-center gap-2">
-                            <MapPin className="h-5 w-5" />
-                            معلومات الاستلام
-                        </h3>
-                        <div className="p-4 bg-muted/50 rounded-lg">
-                            <p className="font-semibold mb-2">
-                                {quote.deliveryOption === 'Delivery' ? 'توصيل إلى المنزل' : 'استلام من المتجر'}
-                            </p>
-                            {quote.deliveryAddress && (
-                                <p className="text-sm text-muted-foreground">{quote.deliveryAddress}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    { !isPendingApproval && (
+                    ) : (
                         <>
-                            <Separator />
-                            <div>
-                                <h3 className="font-semibold mb-3">ملخص السعر</h3>
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm">
-                                        <span className="text-muted-foreground">السعر المبدئي</span>
-                                        <span>{quote.estimatedPrice.toLocaleString()} ريال</span>
-                                    </div>
-                                    {quote.finalPrice && quote.finalPrice !== quote.estimatedPrice && (
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-muted-foreground">السعر النهائي المتفق عليه</span>
-                                            <span className="font-semibold">{quote.finalPrice.toLocaleString()} ريال</span>
-                                        </div>
-                                    )}
-                                    <Separator />
-                                    <div className="flex justify-between text-lg font-bold">
-                                        <span>المجموع</span>
-                                        <span>{order.total.toLocaleString()} ريال</span>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                <div className="flex items-start gap-3">
+                                    <Calendar className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                    <div>
+                                        <p className="text-sm text-muted-foreground">تاريخ الطلب</p>
+                                        <p className="font-semibold">{new Date(order.date).toLocaleDateString('ar-SA')}</p>
                                     </div>
                                 </div>
+                                {!isPendingApproval && (
+                                    <div className="flex items-start gap-3">
+                                        <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                        <div>
+                                            <p className="text-sm text-muted-foreground">المبلغ الإجمالي</p>
+                                            <p className="font-semibold text-lg">{order.total.toLocaleString()} ريال</p>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
-                        </>
-                    )}
 
-                    {showNegotiation && (
-                         <Card className="bg-muted/30">
-                            <CardHeader>
-                                <CardTitle>المفاوضة مع البائع</CardTitle>
-                                <CardDescription>هنا يمكنك التواصل مع البائع بخصوص السعر والتفاصيل.</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <ScrollArea className="h-[250px] w-full pr-4 mb-4 border bg-background rounded-lg p-4">
-                                    <div className="space-y-4">
-                                        {quote.messages.map((msg, index) => (
-                                            <div key={index} className={cn("flex items-end gap-2", msg.sender === 'Customer' ? 'justify-end' : 'justify-start')}>
-                                                {msg.sender === 'Vendor' && (
-                                                    <Avatar className="h-8 w-8">
-                                                        <AvatarFallback>B</AvatarFallback>
-                                                    </Avatar>
-                                                )}
-                                                <div className={cn("max-w-xs md:max-w-md p-3 rounded-lg", msg.sender === 'Customer' ? 'bg-primary text-primary-foreground' : 'bg-muted')}>
-                                                    <p className="text-sm">{msg.message}</p>
-                                                    <p className="text-xs text-right mt-1 opacity-70">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                                                </div>
-                                                {msg.sender === 'Customer' && (
-                                                     <Avatar className="h-8 w-8">
-                                                        <AvatarFallback>{quote.customerName.charAt(0)}</AvatarFallback>
-                                                    </Avatar>
-                                                )}
+                            <Separator />
+
+                            {product && (
+                                <div>
+                                    <h3 className="font-semibold mb-3 flex items-center gap-2">
+                                        <Package className="h-5 w-5" />
+                                        المنتج
+                                    </h3>
+                                    <div className="p-4 bg-muted/50 rounded-lg space-y-2">
+                                        <p className="font-semibold">{quote.productName}</p>
+                                        <p className="text-sm text-muted-foreground">
+                                            النوع: {quote.khatTypeName} | الكمية: {quote.quantity} جرام
+                                        </p>
+                                        <p className="text-sm text-muted-foreground">البائع: {product.vendor}</p>
+                                    </div>
+                                </div>
+                            )}
+
+                            <Separator />
+
+                            <div>
+                                <h3 className="font-semibold mb-3 flex items-center gap-2">
+                                    <MapPin className="h-5 w-5" />
+                                    معلومات الاستلام
+                                </h3>
+                                <div className="p-4 bg-muted/50 rounded-lg">
+                                    <p className="font-semibold mb-2">
+                                        {quote.deliveryOption === 'Delivery' ? 'توصيل إلى المنزل' : 'استلام من المتجر'}
+                                    </p>
+                                    {quote.deliveryAddress && (
+                                        <p className="text-sm text-muted-foreground">{quote.deliveryAddress}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            { !isPendingApproval && (
+                                <>
+                                    <Separator />
+                                    <div>
+                                        <h3 className="font-semibold mb-3">ملخص السعر</h3>
+                                        <div className="space-y-2">
+                                            <div className="flex justify-between text-sm">
+                                                <span className="text-muted-foreground">السعر المبدئي</span>
+                                                <span>{quote.estimatedPrice.toLocaleString()} ريال</span>
                                             </div>
-                                        ))}
+                                            {quote.finalPrice && quote.finalPrice !== quote.estimatedPrice && (
+                                                <div className="flex justify-between text-sm">
+                                                    <span className="text-muted-foreground">السعر النهائي المتفق عليه</span>
+                                                    <span className="font-semibold">{quote.finalPrice.toLocaleString()} ريال</span>
+                                                </div>
+                                            )}
+                                            <Separator />
+                                            <div className="flex justify-between text-lg font-bold">
+                                                <span>المجموع</span>
+                                                <span>{order.total.toLocaleString()} ريال</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </ScrollArea>
-                                <div className="space-y-2">
-                                    <div className="relative">
-                                        <Textarea
-                                            placeholder="اكتب رسالتك هنا..."
-                                            className="pr-16"
-                                            rows={3}
-                                            value={message}
-                                            onChange={(e) => setMessage(e.target.value)}
-                                        />
-                                        <Button
-                                            size="icon"
-                                            className="absolute top-1/2 right-3 -translate-y-1/2"
-                                            onClick={handleSendMessage}
-                                            disabled={!message.trim()}
-                                        >
-                                            <CornerDownLeft className="h-5 w-5" />
-                                        </Button>
-                                    </div>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={handleSuggestReply}
-                                        disabled={isSuggesting}
-                                    >
-                                        {isSuggesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                                        اقتراح رد
+                                </>
+                            )}
+
+                            {showNegotiation && (
+                                <Card className="bg-muted/30">
+                                    <CardHeader>
+                                        <CardTitle>المفاوضة مع البائع</CardTitle>
+                                        <CardDescription>هنا يمكنك التواصل مع البائع بخصوص السعر والتفاصيل.</CardDescription>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <ScrollArea className="h-[250px] w-full pr-4 mb-4 border bg-background rounded-lg p-4">
+                                            <div className="space-y-4">
+                                                {quote.messages.map((msg, index) => (
+                                                    <div key={index} className={cn("flex items-end gap-2", msg.sender === 'Customer' ? 'justify-end' : 'justify-start')}>
+                                                        {msg.sender === 'Vendor' && (
+                                                            <Avatar className="h-8 w-8">
+                                                                <AvatarFallback>B</AvatarFallback>
+                                                            </Avatar>
+                                                        )}
+                                                        <div className={cn("max-w-xs md:max-w-md p-3 rounded-lg", msg.sender === 'Customer' ? 'bg-primary text-primary-foreground' : 'bg-muted')}>
+                                                            <p className="text-sm">{msg.message}</p>
+                                                            <p className="text-xs text-right mt-1 opacity-70">{new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                                                        </div>
+                                                        {msg.sender === 'Customer' && (
+                                                            <Avatar className="h-8 w-8">
+                                                                <AvatarFallback>{quote.customerName.charAt(0)}</AvatarFallback>
+                                                            </Avatar>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </ScrollArea>
+                                        <div className="space-y-2">
+                                            <div className="relative">
+                                                <Textarea
+                                                    placeholder="اكتب رسالتك هنا..."
+                                                    className="pr-16"
+                                                    rows={3}
+                                                    value={message}
+                                                    onChange={(e) => setMessage(e.target.value)}
+                                                />
+                                                <Button
+                                                    size="icon"
+                                                    className="absolute top-1/2 right-3 -translate-y-1/2"
+                                                    onClick={handleSendMessage}
+                                                    disabled={!message.trim()}
+                                                >
+                                                    <CornerDownLeft className="h-5 w-5" />
+                                                </Button>
+                                            </div>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                onClick={handleSuggestReply}
+                                                disabled={isSuggesting}
+                                            >
+                                                {isSuggesting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                                                اقتراح رد
+                                            </Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            )}
+
+
+                            {isDelivered && (
+                                <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+                                    <CheckCircle className="h-5 w-5 text-green-600" />
+                                    <p className="text-sm text-green-800">تم تسليم الطلب بنجاح. شكراً لاستخدامك خدماتنا!</p>
+                                </div>
+                            )}
+                            
+                            {isPendingApproval && (
+                                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
+                                    <p className="text-sm text-blue-800">
+                                        طلبك في انتظار موافقة البائع. سيتم إشعارك عند قبول الطلب لبدء التفاوض وتحديد السعر النهائي.
+                                    </p>
+                                </div>
+                            )}
+                            
+                            {showPaymentButton && (
+                                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg space-y-3">
+                                    <p className="text-sm text-yellow-800">وافق البائع على السعر النهائي. يرجى إتمام عملية الدفع للمتابعة.</p>
+                                    <Button asChild className="w-full">
+                                        <Link href={`/customer/payment?amount=${order.total}&orderId=${order.id}`}>
+                                            <CreditCard className="mr-2 h-4 w-4" />
+                                            إتمام الدفع ({order.total.toLocaleString()} ريال)
+                                        </Link>
                                     </Button>
                                 </div>
-                            </CardContent>
-                         </Card>
-                    )}
+                            )}
 
-
-                    {isDelivered && (
-                        <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-green-600" />
-                            <p className="text-sm text-green-800">تم تسليم الطلب بنجاح. شكراً لاستخدامك خدماتنا!</p>
-                        </div>
-                    )}
-                    
-                    {isPendingApproval && (
-                         <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
-                            <p className="text-sm text-blue-800">
-                                طلبك في انتظار موافقة البائع. سيتم إشعارك عند قبول الطلب لبدء التفاوض وتحديد السعر النهائي.
-                            </p>
-                        </div>
-                    )}
-                    
-                    {showPaymentButton && (
-                        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg space-y-3">
-                            <p className="text-sm text-yellow-800">وافق البائع على السعر النهائي. يرجى إتمام عملية الدفع للمتابعة.</p>
-                            <Button asChild className="w-full">
-                                <Link href={`/customer/payment?amount=${order.total}&orderId=${order.id}`}>
-                                    <CreditCard className="mr-2 h-4 w-4" />
-                                    إتمام الدفع ({order.total.toLocaleString()} ريال)
-                                </Link>
-                            </Button>
-                        </div>
-                    )}
-
-                    {isProcessing && (
-                         <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-3">
-                            <p className="text-sm text-green-800">تم الدفع بنجاح. البائع يقوم بتجهيز طلبك الآن.</p>
-                            <Button className="w-full" onClick={handleConfirmReceipt}>
-                                <ShieldCheck className="mr-2 h-4 w-4" />
-                                تأكيد استلام الطلب
-                            </Button>
-                         </div>
+                            {isProcessing && (
+                                <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-3">
+                                    <p className="text-sm text-green-800">تم الدفع بنجاح. البائع يقوم بتجهيز طلبك الآن.</p>
+                                    <Button className="w-full" onClick={handleConfirmReceipt}>
+                                        <ShieldCheck className="mr-2 h-4 w-4" />
+                                        تأكيد استلام الطلب
+                                    </Button>
+                                </div>
+                            )}
+                        </>
                     )}
                 </CardContent>
             </Card>
