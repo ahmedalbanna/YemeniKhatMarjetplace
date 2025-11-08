@@ -19,6 +19,8 @@ export default function VendorQuotesPage() {
         return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'مقبول':
         return 'bg-green-100 text-green-800 border-green-200';
+      case 'قيد التجهيز':
+        return 'bg-teal-100 text-teal-800 border-teal-200';
       case 'ملغي':
         return 'bg-red-100 text-red-800 border-red-200';
       default:

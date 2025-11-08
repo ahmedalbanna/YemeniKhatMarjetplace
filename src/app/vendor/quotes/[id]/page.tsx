@@ -62,14 +62,20 @@ export default function QuoteDetailPage() {
         });
 
         // Create order when quote is accepted
-        const newOrder = {
-            id: `ORD-${Date.now()}`,
-            quoteId: quote.id,
-            date: new Date().toISOString().split('T')[0],
-            status: 'بانتظار الموافقة' as const,
-            total: finalPrice,
-        };
-        orders.push(newOrder);
+        const existingOrder = orders.find(o => o.quoteId === quote.id);
+        if (existingOrder) {
+            existingOrder.status = 'بانتظار الموافقة';
+            existingOrder.total = finalPrice;
+        } else {
+            const newOrder = {
+                id: `ORD-${Date.now()}`,
+                quoteId: quote.id,
+                date: new Date().toISOString().split('T')[0],
+                status: 'بانتظار الموافقة' as const,
+                total: finalPrice,
+            };
+            orders.push(newOrder);
+        }
 
         toast({
             title: 'تم إرسال السعر النهائي',
@@ -126,13 +132,27 @@ export default function QuoteDetailPage() {
     }
 
     const showNegotiation = quote.status === 'قيد التفاوض' || quote.status === 'تم الرد' || quote.status === 'مقبول';
+    const isProcessing = quote.status === 'قيد التجهيز';
 
     return (
         <div className="max-w-4xl mx-auto">
             <div className="grid lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-6">
                     {/* Chat/Negotiation Card */}
-                    {showNegotiation ? (
+                    {isProcessing ? (
+                         <Card>
+                            <CardHeader>
+                                <CardTitle className="font-headline text-2xl">تجهيز الطلب</CardTitle>
+                                <CardDescription>تم الدفع. قم بتجهيز الطلب للتسليم أو الاستلام.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+                                    <CheckCircle className="h-5 w-5 text-green-600" />
+                                    <p className="text-sm text-green-800">الطلب مدفوع وفي انتظار التجهيز والتسليم.</p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    ) : showNegotiation ? (
                         <Card>
                             <CardHeader>
                                 <div className="flex justify-between items-start">

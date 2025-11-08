@@ -186,7 +186,7 @@ export type QuoteRequest = {
   productName: string;
   khatTypeName: string;
   quantity: number;
-  status: 'بانتظار موافقة البائع' | 'قيد التفاوض' | 'تم الرد' | 'مقبول' | 'ملغي';
+  status: 'بانتظار موافقة البائع' | 'قيد التفاوض' | 'تم الرد' | 'مقبول' | 'ملغي' | 'قيد التجهيز';
   estimatedPrice: number;
   finalPrice?: number;
   messages: ChatMessage[];
@@ -217,11 +217,15 @@ export const quoteRequests: QuoteRequest[] = [
     productName: 'قات صعدي',
     khatTypeName: 'بزغة',
     quantity: 50,
-    status: 'قيد التفاوض',
+    status: 'مقبول',
     estimatedPrice: 11000, // 50g * 220
+    finalPrice: 10978,
     deliveryOption: 'Pickup',
     messages: [
-      { sender: 'Vendor', message: 'أهلاً بك، تم قبول طلبك مبدئياً. بخصوص السعر، ما هو السعر الذي يناسبك؟', timestamp: '2024-07-29T11:05:00Z' }
+      { sender: 'Vendor', message: 'أهلاً بك، تم قبول طلبك مبدئياً. بخصوص السعر، ما هو السعر الذي يناسبك؟', timestamp: '2024-07-29T11:05:00Z' },
+      { sender: 'Customer', message: 'مرحبا', timestamp: '2024-07-29T14:43:00Z' },
+      { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 10,978 ريال. في انتظار تأكيدك.', timestamp: '2024-07-29T14:47:00Z' }
+
     ],
   },
   {
@@ -231,7 +235,7 @@ export const quoteRequests: QuoteRequest[] = [
     productName: 'قات عنسي فاخر',
     khatTypeName: 'رؤوس',
     quantity: 80,
-    status: 'مقبول',
+    status: 'قيد التجهيز',
     estimatedPrice: 20000, // 80g * 250
     finalPrice: 19500,
     deliveryOption: 'Pickup',

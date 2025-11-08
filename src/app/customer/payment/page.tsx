@@ -71,8 +71,8 @@ export default function PaymentPage() {
             
             // Optionally update quote status if needed for consistency
             const quote = quoteRequests.find(q => q.id === order.quoteId);
-            if (quote && quote.status === 'مقبول') {
-                // You might add a 'Paid' status or similar if needed in the future
+            if (quote) {
+                quote.status = 'قيد التجهيز';
             }
         }
 
