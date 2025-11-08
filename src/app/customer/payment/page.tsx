@@ -10,7 +10,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { ArrowLeft, CreditCard, Wallet, Smartphone, CheckCircle, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { wallet } from '@/lib/mock-data';
+import { wallet, orders, quoteRequests } from '@/lib/mock-data';
 import { useAuth } from '@/contexts/auth-context';
 
 export default function PaymentPage() {
@@ -64,6 +64,22 @@ export default function PaymentPage() {
         // Simulate payment processing
         await new Promise(resolve => setTimeout(resolve, 2000));
 
+        // Update order status
+        const order = orders.find(o => o.id === orderId);
+        if (order) {
+            order.status = 'قيد التجهيز';
+            
+            // Optionally update quote status if needed for consistency
+            const quote = quoteRequests.find(q => q.id === order.quoteId);
+            if (quote && quote.status === 'مقبول') {
+                // You might add a 'Paid' status or similar if needed in the future
+            }
+        }
+
+        if (paymentMethod === 'wallet') {
+            wallet.balance -= amount;
+        }
+
         toast({
             title: 'تم الدفع بنجاح',
             description: `تم دفع ${amount.toLocaleString()} ريال بنجاح.`,
@@ -71,9 +87,9 @@ export default function PaymentPage() {
 
         setIsProcessing(false);
         
-        // Redirect to orders page
+        // Redirect to orders page after a short delay
         setTimeout(() => {
-            router.push('/customer/orders');
+            router.push(`/customer/orders/${orderId}`);
         }, 1500);
     };
 
@@ -220,4 +236,3 @@ export default function PaymentPage() {
         </div>
     );
 }
-
