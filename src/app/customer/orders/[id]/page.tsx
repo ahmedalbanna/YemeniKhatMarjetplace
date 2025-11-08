@@ -51,6 +51,8 @@ export default function OrderDetailPage() {
                 return 'bg-green-100 text-green-800 border-green-200';
             case 'بانتظار الموافقة':
                 return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+             case 'مقبول':
+                return 'bg-green-100 text-green-800 border-green-200';
             case 'قيد التفاوض':
                 return 'bg-blue-100 text-blue-800 border-blue-200';
             case 'قيد التجهيز':
@@ -106,9 +108,12 @@ export default function OrderDetailPage() {
     }
 
 
-    const showNegotiation = order.status === 'قيد التفاوض';
-    const showPaymentButton = quote.status === 'مقبول' && order.status !== 'قيد التجهيز' && order.status !== 'تم التوصيل';
-
+    const showNegotiation = order.status === 'قيد التفاوض' || order.status === 'مقبول';
+    const showPaymentButton = order.status === 'مقبول';
+    const isPendingApproval = order.status === 'بانتظار الموافقة';
+    const isProcessing = order.status === 'قيد التجهيز';
+    const isDelivered = order.status === 'تم التوصيل';
+    
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl space-y-6">
             <Button variant="ghost" onClick={() => router.back()} className="mb-4">
@@ -140,7 +145,7 @@ export default function OrderDetailPage() {
                                 <p className="font-semibold">{new Date(order.date).toLocaleDateString('ar-SA')}</p>
                             </div>
                         </div>
-                        {order.status !== 'بانتظار الموافقة' && (
+                        {!isPendingApproval && (
                              <div className="flex items-start gap-3">
                                 <DollarSign className="h-5 w-5 text-muted-foreground mt-0.5" />
                                 <div>
@@ -186,7 +191,7 @@ export default function OrderDetailPage() {
                         </div>
                     </div>
 
-                    { (showPaymentButton || order.status === 'قيد التجهيز' || order.status === 'تم التوصيل') && (
+                    { !isPendingApproval && (
                         <>
                             <Separator />
                             <div>
@@ -274,14 +279,14 @@ export default function OrderDetailPage() {
                     )}
 
 
-                    {order.status === 'تم التوصيل' && (
+                    {isDelivered && (
                         <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
                             <CheckCircle className="h-5 w-5 text-green-600" />
                             <p className="text-sm text-green-800">تم تسليم الطلب بنجاح. شكراً لاستخدامك خدماتنا!</p>
                         </div>
                     )}
                     
-                    {order.status === 'بانتظار الموافقة' && (
+                    {isPendingApproval && (
                          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
                             <p className="text-sm text-blue-800">
                                 طلبك في انتظار موافقة البائع. سيتم إشعارك عند قبول الطلب لبدء التفاوض وتحديد السعر النهائي.
@@ -295,13 +300,13 @@ export default function OrderDetailPage() {
                             <Button asChild className="w-full">
                                 <Link href={`/customer/payment?amount=${order.total}&orderId=${order.id}`}>
                                     <CreditCard className="mr-2 h-4 w-4" />
-                                    إتمام الدفع (${order.total.toLocaleString()})
+                                    إتمام الدفع ({order.total.toLocaleString()} ريال)
                                 </Link>
                             </Button>
                         </div>
                     )}
 
-                    {order.status === 'قيد التجهيز' && (
+                    {isProcessing && (
                          <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-3">
                             <p className="text-sm text-green-800">تم الدفع بنجاح. البائع يقوم بتجهيز طلبك الآن.</p>
                             <Button className="w-full" onClick={handleConfirmReceipt}>

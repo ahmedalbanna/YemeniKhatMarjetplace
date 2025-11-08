@@ -57,21 +57,21 @@ export default function QuoteDetailPage() {
         quote.status = 'مقبول';
         quote.messages.push({
             sender: 'Vendor',
-            message: `تم تحديد السعر النهائي بـ ${finalPrice.toLocaleString()} ريال. في انتظار تأكيدك.`,
+            message: `تم تحديد السعر النهائي بـ ${finalPrice.toLocaleString()} ريال. في انتظار موافقة العميل والدفع.`,
             timestamp: new Date().toISOString()
         });
 
-        // Create order when quote is accepted
+        // Create or update the order when the final price is sent
         const existingOrder = orders.find(o => o.quoteId === quote.id);
         if (existingOrder) {
-            existingOrder.status = 'بانتظار الموافقة';
             existingOrder.total = finalPrice;
+            existingOrder.status = 'مقبول'; // Or 'بانتظار الدفع'
         } else {
             const newOrder = {
                 id: `ORD-${Date.now()}`,
                 quoteId: quote.id,
                 date: new Date().toISOString().split('T')[0],
-                status: 'بانتظار الموافقة' as const,
+                status: 'مقبول' as const,
                 total: finalPrice,
             };
             orders.push(newOrder);
@@ -79,7 +79,7 @@ export default function QuoteDetailPage() {
 
         toast({
             title: 'تم إرسال السعر النهائي',
-            description: 'تم إرسال السعر النهائي للعميل وإنشاء الطلب.',
+            description: 'تم إرسال السعر النهائي للعميل وتحديث الطلب.',
         });
         router.refresh();
     };
@@ -133,12 +133,13 @@ export default function QuoteDetailPage() {
 
     const showNegotiation = quote.status === 'قيد التفاوض' || quote.status === 'تم الرد' || quote.status === 'مقبول';
     const isProcessing = quote.status === 'قيد التجهيز';
+    const isDelivered = quote.status === 'تم التوصيل';
 
     return (
         <div className="max-w-4xl mx-auto">
             <div className="grid lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-6">
-                    {/* Chat/Negotiation Card */}
+                    {/* Main Card: State-dependent */}
                     {isProcessing ? (
                          <Card>
                             <CardHeader>
@@ -152,6 +153,18 @@ export default function QuoteDetailPage() {
                                 </div>
                             </CardContent>
                         </Card>
+                    ) : isDelivered ? (
+                         <Card>
+                            <CardHeader>
+                                <CardTitle className="font-headline text-2xl">اكتمل الطلب</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-center gap-3">
+                                    <CheckCircle className="h-5 w-5 text-blue-600" />
+                                    <p className="text-sm text-blue-800">تم توصيل هذا الطلب بنجاح.</p>
+                                </div>
+                            </CardContent>
+                        </Card>
                     ) : showNegotiation ? (
                         <Card>
                             <CardHeader>
@@ -162,7 +175,10 @@ export default function QuoteDetailPage() {
                                     </div>
                                     <Badge
                                         variant="outline"
-                                        className="capitalize h-fit"
+                                        className={cn("capitalize h-fit", 
+                                            quote.status === 'مقبول' && 'bg-green-100 text-green-800 border-green-200',
+                                            quote.status === 'قيد التفاوض' && 'bg-blue-100 text-blue-800 border-blue-200'
+                                        )}
                                     >
                                         {quote.status}
                                     </Badge>
@@ -270,9 +286,9 @@ export default function QuoteDetailPage() {
                                 </div>
                             </CardContent>
                             <CardFooter className="flex justify-end pt-4">
-                                <Button size="lg" onClick={handleSendFinalPrice} disabled={finalPrice <= 0}>
+                                <Button size="lg" onClick={handleSendFinalPrice} disabled={finalPrice <= 0 || quote.status === 'مقبول'}>
                                     <Send className="mr-2 h-5 w-5" />
-                                    إرسال عرض السعر النهائي للعميل
+                                    {quote.status === 'مقبول' ? 'تم إرسال السعر' : 'إرسال عرض السعر النهائي للعميل'}
                                 </Button>
                             </CardFooter>
                         </Card>

@@ -21,6 +21,8 @@ export default function VendorQuotesPage() {
         return 'bg-green-100 text-green-800 border-green-200';
       case 'قيد التجهيز':
         return 'bg-teal-100 text-teal-800 border-teal-200';
+       case 'تم التوصيل':
+        return 'bg-green-100 text-green-800 border-green-200';
       case 'ملغي':
         return 'bg-red-100 text-red-800 border-red-200';
       default:
@@ -48,6 +50,7 @@ export default function VendorQuotesPage() {
                 <TableHead>المنتج</TableHead>
                 <TableHead>الحالة</TableHead>
                 <TableHead className="text-left">السعر المبدئي</TableHead>
+                <TableHead className="text-left">السعر النهائي</TableHead>
                 <TableHead className="text-left">الإجراءات</TableHead>
               </TableRow>
             </TableHeader>
@@ -73,7 +76,10 @@ export default function VendorQuotesPage() {
                       {req.status}
                     </Badge>
                   </TableCell>
-                  <TableCell className="text-left">{req.estimatedPrice.toLocaleString()} ريال</TableCell>
+                  <TableCell className="text-left font-mono">{req.estimatedPrice.toLocaleString()} ريال</TableCell>
+                   <TableCell className="text-left font-mono">
+                    {req.finalPrice ? `${req.finalPrice.toLocaleString()} ريال` : '-'}
+                  </TableCell>
                   <TableCell className="text-left">
                     <Button variant="outline" size="sm" asChild>
                       <Link href={`/vendor/quotes/${req.id}`}>

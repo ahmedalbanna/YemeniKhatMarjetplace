@@ -134,11 +134,13 @@ export const products: Product[] = [
   },
 ];
 
+export type OrderStatus = 'تم التوصيل' | 'قيد التجهيز' | 'بانتظار الموافقة' | 'ملغي' | 'قيد التفاوض' | 'مقبول';
+
 export type Order = {
   id: string;
   quoteId: string;
   date: string;
-  status: 'تم التوصيل' | 'قيد التجهيز' | 'بانتظار الموافقة' | 'ملغي' | 'قيد التفاوض';
+  status: OrderStatus;
   total: number;
 };
 
@@ -164,12 +166,12 @@ export const orders: Order[] = [
     status: 'بانتظار الموافقة',
     total: 18000,
   },
-    {
+  {
     id: 'ORD-006',
     quoteId: 'QT-006',
     date: '2024-07-29',
-    status: 'قيد التفاوض',
-    total: 11000,
+    status: 'مقبول',
+    total: 10978,
   },
 ];
 
@@ -179,6 +181,9 @@ export type ChatMessage = {
   timestamp: string;
 };
 
+export type QuoteRequestStatus = 'بانتظار موافقة البائع' | 'قيد التفاوض' | 'تم الرد' | 'مقبول' | 'ملغي' | 'قيد التجهيز' | 'تم التوصيل';
+
+
 export type QuoteRequest = {
   id: string;
   date: string;
@@ -186,7 +191,7 @@ export type QuoteRequest = {
   productName: string;
   khatTypeName: string;
   quantity: number;
-  status: 'بانتظار موافقة البائع' | 'قيد التفاوض' | 'تم الرد' | 'مقبول' | 'ملغي' | 'قيد التجهيز' | 'تم التوصيل';
+  status: QuoteRequestStatus;
   estimatedPrice: number;
   finalPrice?: number;
   messages: ChatMessage[];
@@ -224,7 +229,7 @@ export const quoteRequests: QuoteRequest[] = [
     messages: [
       { sender: 'Vendor', message: 'أهلاً بك، تم قبول طلبك مبدئياً. بخصوص السعر، ما هو السعر الذي يناسبك؟', timestamp: '2024-07-29T11:05:00Z' },
       { sender: 'Customer', message: 'مرحبا', timestamp: '2024-07-29T14:43:00Z' },
-      { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 10,978 ريال. في انتظار تأكيدك.', timestamp: '2024-07-29T14:47:00Z' }
+      { sender: 'Vendor', message: "تم تحديد السعر النهائي بـ 10,978 ريال. في انتظار موافقة العميل والدفع.", timestamp: '2024-07-29T14:47:00Z' }
 
     ],
   },
