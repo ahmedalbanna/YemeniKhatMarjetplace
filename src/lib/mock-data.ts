@@ -186,7 +186,7 @@ export type QuoteRequest = {
   productName: string;
   khatTypeName: string;
   quantity: number;
-  status: 'بانتظار موافقة البائع' | 'قيد التفاوض' | 'تم الرد' | 'مقبول' | 'ملغي' | 'قيد التجهيز';
+  status: 'بانتظار موافقة البائع' | 'قيد التفاوض' | 'تم الرد' | 'مقبول' | 'ملغي' | 'قيد التجهيز' | 'تم التوصيل';
   estimatedPrice: number;
   finalPrice?: number;
   messages: ChatMessage[];
@@ -251,7 +251,7 @@ export const quoteRequests: QuoteRequest[] = [
     productName: 'قات أرحبي فاخر',
     khatTypeName: 'عاقدات',
     quantity: 200,
-    status: 'مقبول',
+    status: 'تم التوصيل',
     estimatedPrice: 30000, // 200g * 150
     finalPrice: 29000,
     deliveryOption: 'Delivery',

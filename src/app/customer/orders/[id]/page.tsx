@@ -35,6 +35,9 @@ export default function OrderDetailPage() {
 
     const handleConfirmReceipt = () => {
         order.status = 'تم التوصيل';
+        if (quote) {
+            quote.status = 'تم التوصيل';
+        }
         toast({
             title: 'تم تأكيد الاستلام',
             description: 'شكراً لك! تم تحديث حالة الطلب إلى "تم التوصيل".',
