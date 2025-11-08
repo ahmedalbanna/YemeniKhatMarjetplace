@@ -1,7 +1,7 @@
 export type KhatType = {
   id: string;
   name: 'بزغة' | 'رؤوس' | 'أميال' | 'عاقدات' | 'أبو ريشة صفراء';
-  price: number;
+  pricePerGram: number; // Changed from price
   description: string;
 };
 
@@ -42,7 +42,7 @@ export type Product = {
   name: string;
   strain: 'أرحبي' | 'صعدي' | 'عنسي' | 'همداني' | 'حضرمي';
   category: 'قات';
-  price: number; // Base price for general display
+  price: number; // Base price for general display, can be considered price for a base unit like a "maddah"
   description: string;
   vendor: string;
   images: string[];
@@ -70,9 +70,9 @@ export const products: Product[] = [
     governorateId: 'sanaa',
     marketId: 'bab-al-yemen',
     khatTypes: [
-      { id: '1-1', name: 'رؤوس', price: 18000, description: 'أفضل الرؤوس المختارة بعناية.' },
-      { id: '1-2', name: 'عاقدات', price: 15000, description: 'عاقدات طرية ذات جودة عالية.' },
-      { id: '1-3', name: 'أميال', price: 12000, description: 'أميال ممتازة للمستخدم اليومي.' },
+      { id: '1-1', name: 'رؤوس', pricePerGram: 180, description: 'أفضل الرؤوس المختارة بعناية.' },
+      { id: '1-2', name: 'عاقدات', pricePerGram: 150, description: 'عاقدات طرية ذات جودة عالية.' },
+      { id: '1-3', name: 'أميال', pricePerGram: 120, description: 'أميال ممتازة للمستخدم اليومي.' },
     ],
   },
   {
@@ -90,8 +90,8 @@ export const products: Product[] = [
     governorateId: 'sanaa',
     marketId: 'shamlan',
     khatTypes: [
-        { id: '3-1', name: 'بزغة', price: 22000, description: 'بزغة صعدي نادرة وقوية المفعول.' },
-        { id: '3-2', name: 'رؤوس', price: 18000, description: 'رؤوس صعدي طازجة ومقرمشة.' },
+        { id: '3-1', name: 'بزغة', pricePerGram: 220, description: 'بزغة صعدي نادرة وقوية المفعول.' },
+        { id: '3-2', name: 'رؤوس', pricePerGram: 180, description: 'رؤوس صعدي طازجة ومقرمشة.' },
     ],
   },
   {
@@ -109,8 +109,8 @@ export const products: Product[] = [
     governorateId: 'sanaa',
     marketId: 'bab-al-yemen',
     khatTypes: [
-      { id: '5-1', name: 'رؤوس', price: 25000, description: 'أفضل أنواع القات العنسي الفاخر.' },
-      { id: '5-2', name: 'أبو ريشة صفراء', price: 20000, description: 'يتميز بلونه الأصفر وطعمه الفريد.' },
+      { id: '5-1', name: 'رؤوس', pricePerGram: 250, description: 'أفضل أنواع القات العنسي الفاخر.' },
+      { id: '5-2', name: 'أبو ريشة صفراء', pricePerGram: 200, description: 'يتميز بلونه الأصفر وطعمه الفريد.' },
     ],
   },
   {
@@ -128,8 +128,8 @@ export const products: Product[] = [
     governorateId: 'hadhramaut',
     marketId: 'seiyun',
     khatTypes: [
-        { id: '7-1', name: 'رؤوس', price: 12000, description: 'تجربة حضرمية فريدة.' },
-        { id: '7-2', name: 'أميال', price: 10000, description: 'جيد للاستخدام اليومي.' },
+        { id: '7-1', name: 'رؤوس', pricePerGram: 120, description: 'تجربة حضرمية فريدة.' },
+        { id: '7-2', name: 'أميال', pricePerGram: 100, description: 'جيد للاستخدام اليومي.' },
     ],
   },
 ];
@@ -150,7 +150,6 @@ export const orders: Order[] = [
     total: 23000,
     items: [
       { productId: '1', quantity: 1, name: 'قات أرحبي فاخر' },
-      { productId: '4', quantity: 2, name: 'تبغ بنكهة (معسل)' },
     ],
   },
   {
@@ -169,7 +168,6 @@ export const orders: Order[] = [
     total: 39000,
     items: [
       { productId: '3', quantity: 2, name: 'قات صعدي' },
-      { productId: '6', quantity: 1, name: 'قارورة ماء محمولة' },
     ],
   },
     {

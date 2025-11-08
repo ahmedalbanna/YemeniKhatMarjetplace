@@ -3,58 +3,62 @@
 
 import { notFound, useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { products, KhatType } from '@/lib/mock-data';
+import { products } from '@/lib/mock-data';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Star, Minus, Plus, MessageSquareQuote, Leaf } from 'lucide-react';
+import { Star, Send, Leaf } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { Separator } from '@/components/ui/separator';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
+
+type OrderQuantities = {
+  [key: string]: number;
+};
 
 export default function ProductDetailPage() {
-  const [quantity, setQuantity] = useState(1);
-  const [selectedType, setSelectedType] = useState<KhatType | null>(null);
+  const [quantities, setQuantities] = useState<OrderQuantities>({});
   const router = useRouter();
   const params = useParams();
   const productId = params.id as string;
 
   const product = products.find((p) => p.id === productId);
 
-  useEffect(() => {
-    if (product?.khatTypes && product.khatTypes.length > 0 && !selectedType) {
-      setSelectedType(product.khatTypes[0]);
-    }
-  }, [product, selectedType]);
-
   if (!product) {
     notFound();
   }
+
+  const handleQuantityChange = (typeId: string, value: string) => {
+    const amount = parseInt(value, 10);
+    setQuantities(prev => ({
+      ...prev,
+      [typeId]: isNaN(amount) || amount < 0 ? 0 : amount,
+    }));
+  };
+
+  const totalCost = useMemo(() => {
+    return product.khatTypes?.reduce((total, type) => {
+      const quantity = quantities[type.id] || 0;
+      return total + (quantity * type.pricePerGram);
+    }, 0) || 0;
+  }, [quantities, product.khatTypes]);
   
-  const handleQuantityChange = (amount: number) => {
-    setQuantity((prev) => Math.max(1, prev + amount));
-  }
-
-  const handleTypeSelection = (typeId: string) => {
-      const type = product?.khatTypes?.find(t => t.id === typeId) || null;
-      setSelectedType(type);
-      setQuantity(1);
-  }
-
   const handleRequestQuote = () => {
-    if (product && selectedType) {
+    const items = Object.entries(quantities)
+        .filter(([_, quantity]) => quantity > 0)
+        .map(([typeId, quantity]) => ({ typeId, quantity }));
+    
+    if (items.length > 0) {
         const query = new URLSearchParams({
             productId: product.id,
-            typeId: selectedType?.id || '',
-            quantity: quantity.toString(),
+            items: JSON.stringify(items),
         }).toString();
         router.push(`/negotiate?${query}`);
     }
   }
-
-  const displayPrice = selectedType ? selectedType.price * quantity : product.price * quantity;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -90,52 +94,51 @@ export default function ProductDetailPage() {
 
             {product.khatTypes && product.khatTypes.length > 0 && (
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-3">اختر الفئة (حسب الحبة)</h3>
-                 <RadioGroup
-                    value={selectedType?.id}
-                    onValueChange={handleTypeSelection}
-                    className="gap-4"
-                  >
+                <h3 className="text-lg font-semibold mb-3">اختر الكمية بالجرام لكل فئة</h3>
+                 <div className="space-y-4">
                     {product.khatTypes.map((type) => (
-                      <Card key={type.id} className="p-4 flex items-center justify-between cursor-pointer has-[[data-state=checked]]:border-primary has-[[data-state=checked]]:shadow-lg">
-                        <div className="flex items-center gap-4">
-                           <Leaf className="w-6 h-6 text-primary/70" />
+                      <Card key={type.id} className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div className="flex items-center gap-4 flex-grow">
+                           <Leaf className="w-6 h-6 text-primary/70 shrink-0" />
                            <div>
                                 <Label htmlFor={type.id} className="font-bold text-base cursor-pointer">{type.name}</Label>
                                 <p className="text-sm text-muted-foreground">{type.description}</p>
+                                <p className="font-semibold text-primary/90 text-sm mt-1">{type.pricePerGram.toLocaleString()} ريال/جرام</p>
                            </div>
                         </div>
-                        <div className="text-left">
-                             <p className="font-bold text-lg text-primary">{type.price.toLocaleString()} ريال</p>
-                             <RadioGroupItem value={type.id} id={type.id} className="mt-1 mr-auto" />
+                        <div className="flex items-center gap-2 w-full sm:w-auto">
+                            <Input 
+                                id={type.id} 
+                                type="number" 
+                                min="0"
+                                step="10"
+                                placeholder="0"
+                                className="w-24 text-center"
+                                value={quantities[type.id] || ''}
+                                onChange={(e) => handleQuantityChange(type.id, e.target.value)}
+                            />
+                            <Label htmlFor={type.id} className="text-sm text-muted-foreground">جرام</Label>
                         </div>
                       </Card>
                     ))}
-                  </RadioGroup>
+                  </div>
               </div>
             )}
             
             <div className="flex items-center justify-between bg-muted/50 p-4 rounded-lg mb-6">
-                <span className="text-lg font-medium text-muted-foreground">السعر الإجمالي التقديري</span>
-                <p className="text-4xl font-bold text-primary">{displayPrice.toLocaleString()} ريال</p>
+                <span className="text-lg font-medium text-muted-foreground">السعر الإجمالي</span>
+                <p className={cn("text-4xl font-bold text-primary transition-colors duration-300", totalCost === 0 && "text-muted-foreground")}>
+                  {totalCost.toLocaleString()} ريال
+                </p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="flex items-center gap-2 border rounded-md p-2">
-                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleQuantityChange(-1)} disabled={!selectedType || quantity <= 1}>
-                  <Minus className="h-4 w-4" />
-                </Button>
-                <span className="font-bold w-8 text-center">{quantity}</span>
-                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleQuantityChange(1)} disabled={!selectedType}>
-                  <Plus className="h-4 w-4" />
-                </Button>
-              </div>
-              <Button size="lg" className="w-full sm:w-auto" disabled={!selectedType} onClick={handleRequestQuote}>
-                <MessageSquareQuote className="ml-2 h-5 w-5" />
-                اطلب عرض سعر
+              <Button size="lg" className="w-full" disabled={totalCost === 0} onClick={handleRequestQuote}>
+                <Send className="ml-2 h-5 w-5" />
+                إرسال الطلب للبائع
               </Button>
             </div>
-            <p className="text-xs text-muted-foreground mt-4">ملحوظة: السعر أعلاه هو سعر تقديري. أرسل طلبًا للحصول على السعر النهائي من البائع.</p>
+            <p className="text-xs text-muted-foreground mt-4">ملحوظة: السعر ثابت حسب ما يحدده البائع. أرسل الطلب وانتظر موافقة البائع للمتابعة إلى خيارات التسليم والدفع.</p>
           </div>
         </div>
       </Card>
