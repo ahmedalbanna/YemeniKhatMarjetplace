@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, Leaf, User, Package2, ClipboardList, LayoutDashboard } from 'lucide-react';
+import { Menu, Leaf, User, Package2, ClipboardList, LayoutDashboard, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
@@ -19,6 +19,7 @@ import { useState } from 'react';
 const navLinks = [
   { href: '/', label: 'السوق' },
   { href: '/orders', label: 'طلباتي' },
+  { href: '/wallet', label: 'المحفظة' },
   { href: '/support', label: 'الدعم' },
 ];
 
@@ -97,6 +98,7 @@ export function Header() {
               <DropdownMenuLabel>حسابي</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild><Link href="/orders"><Package2 className="ml-2 h-4 w-4" />طلباتي</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/wallet"><Wallet className="ml-2 h-4 w-4" />المحفظة</Link></DropdownMenuItem>
               <DropdownMenuItem asChild><Link href="/dashboard"><LayoutDashboard className="ml-2 h-4 w-4" />لوحة تحكم البائع</Link></DropdownMenuItem>
               <DropdownMenuItem asChild><Link href="/support">الدعم</Link></DropdownMenuItem>
               <DropdownMenuSeparator />

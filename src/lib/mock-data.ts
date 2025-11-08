@@ -136,48 +136,33 @@ export const products: Product[] = [
 
 export type Order = {
   id: string;
+  quoteId: string;
   date: string;
-  status: 'تم التوصيل' | 'قيد التجهيز' | 'ملغي';
+  status: 'تم التوصيل' | 'قيد التجهيز' | 'بانتظار الموافقة' | 'ملغي';
   total: number;
-  items: { productId: string; quantity: number; name: string }[];
 };
 
 export const orders: Order[] = [
   {
     id: 'ORD-001',
-    date: '2024-07-20',
+    quoteId: 'QT-004',
+    date: '2024-07-26',
     status: 'تم التوصيل',
-    total: 23000,
-    items: [
-      { productId: '1', quantity: 1, name: 'قات أرحبي فاخر' },
-    ],
+    total: 29000,
   },
   {
     id: 'ORD-002',
-    date: '2024-07-22',
-    status: 'تم التوصيل',
-    total: 8000,
-    items: [
-      { productId: '2', quantity: 1, name: 'مداعة تقليدية' },
-    ],
-  },
-  {
-    id: 'ORD-003',
-    date: '2024-07-25',
+    quoteId: 'QT-003',
+    date: '2024-07-27',
     status: 'قيد التجهيز',
-    total: 39000,
-    items: [
-      { productId: '3', quantity: 2, name: 'قات صعدي' },
-    ],
+    total: 19500,
   },
     {
-    id: 'ORD-004',
-    date: '2024-07-26',
-    status: 'ملغي',
-    total: 20000,
-    items: [
-      { productId: '5', quantity: 1, name: 'قات عنسي فاخر' },
-    ],
+    id: 'ORD-003',
+    quoteId: 'QT-001',
+    date: '2024-07-28',
+    status: 'بانتظار الموافقة',
+    total: 18000,
   },
 ];
 
@@ -310,4 +295,51 @@ export const faqs: Faq[] = [
     question: 'كيف أصبح بائعًا على المنصة؟',
     answer: 'نحن نتطلع دائمًا إلى الشراكة مع البائعين المتميزين. يرجى الانتقال إلى قسم "اتصل بنا" وإرسال رسالة إلينا بعنوان "استفسار بائع". سيعود فريقنا إليك بالخطوات التالية.',
   }
+];
+
+export type Wallet = {
+  balance: number;
+};
+
+export type Transaction = {
+  id: string;
+  date: string;
+  type: 'deposit' | 'payment' | 'refund';
+  amount: number;
+  description: string;
+};
+
+export const wallet: Wallet = {
+  balance: 52500,
+};
+
+export const transactions: Transaction[] = [
+    {
+        id: 'TXN-001',
+        date: '2024-07-26',
+        type: 'payment',
+        amount: 29000,
+        description: 'دفع للطلب ORD-001'
+    },
+    {
+        id: 'TXN-002',
+        date: '2024-07-25',
+        type: 'deposit',
+        amount: 100000,
+        description: 'إيداع من حساب بنكي'
+    },
+     {
+        id: 'TXN-003',
+        date: '2024-07-24',
+        type: 'refund',
+        amount: 15000,
+        description: 'استرداد للطلب الملغي QT-005'
+    },
+     {
+        id: 'TXN-004',
+        date: '2024-07-22',
+        type: 'payment',
+        amount: 18500,
+        description: 'دفع للطلب X-485'
+    },
 ];
