@@ -12,26 +12,26 @@ export type Governorate = {
 };
 
 export const governorates: Governorate[] = [
-  { 
-    id: 'sanaa', 
-    name: 'صنعاء', 
+  {
+    id: 'sanaa',
+    name: 'صنعاء',
     markets: [
       { id: 'bab-al-yemen', name: 'سوق باب اليمن' },
       { id: 'shamlan', name: 'سوق شملان' },
-    ] 
+    ]
   },
-  { 
-    id: 'aden', 
-    name: 'عدن', 
+  {
+    id: 'aden',
+    name: 'عدن',
     markets: [
       { id: 'crater', name: 'سوق كريتر' },
-    ] 
+    ]
   },
   {
     id: 'hadhramaut',
     name: 'حضرموت',
     markets: [
-        { id: 'seiyun', name: 'سوق سيئون' }
+      { id: 'seiyun', name: 'سوق سيئون' }
     ]
   }
 ];
@@ -49,8 +49,8 @@ export type Product = {
   rating: number;
   reviews: number;
   dataAiHint: string;
-  governorateId: string; 
-  marketId: string; 
+  governorateId: string;
+  marketId: string;
   khatTypes?: KhatType[];
 };
 
@@ -63,7 +63,7 @@ export const products: Product[] = [
     price: 15000,
     description: 'تشكيلة فاخرة من أوراق القات الأرحبي الطازجة، تتميز بجودتها العالية وتأثيرها المميز. من أشهر مزارع أرحب.',
     vendor: 'مزارع السعيد',
-    images: ['https://placehold.co/600x600', 'https://placehold.co/600x600', 'https://placehold.co/600x600'],
+    images: ['https://placehold.co/600x600/png', 'https://placehold.co/600x600/png', 'https://placehold.co/600x600/png'],
     rating: 4.8,
     reviews: 120,
     dataAiHint: 'green leaves',
@@ -83,15 +83,15 @@ export const products: Product[] = [
     price: 18000,
     description: 'قات صعدي مقرمش، يتم حصاده يومياً من مزارع صعدة. خيار شائع لنكهته ورائحته القوية.',
     vendor: 'تعاونية مزارعي اليمن',
-    images: ['https://placehold.co/600x600'],
+    images: ['https://placehold.co/600x600/png'],
     rating: 4.9,
     reviews: 250,
     dataAiHint: 'khat leaves',
     governorateId: 'sanaa',
     marketId: 'shamlan',
     khatTypes: [
-        { id: '3-1', name: 'بزغة', pricePerGram: 220, description: 'بزغة صعدي نادرة وقوية المفعول.' },
-        { id: '3-2', name: 'رؤوس', pricePerGram: 180, description: 'رؤوس صعدي طازجة ومقرمشة.' },
+      { id: '3-1', name: 'بزغة', pricePerGram: 220, description: 'بزغة صعدي نادرة وقوية المفعول.' },
+      { id: '3-2', name: 'رؤوس', pricePerGram: 180, description: 'رؤوس صعدي طازجة ومقرمشة.' },
     ],
   },
   {
@@ -102,7 +102,7 @@ export const products: Product[] = [
     price: 20000,
     description: 'نوع نادر ومطلوب من القات العنسي، يقدم تجربة فريدة وقوية. توفر محدود.',
     vendor: 'مزارع السعيد',
-    images: ['https://placehold.co/600x600', 'https://placehold.co/600x600'],
+    images: ['https://placehold.co/600x600/png', 'https://placehold.co/600x600/png'],
     rating: 4.9,
     reviews: 75,
     dataAiHint: 'dark green leaves',
@@ -121,15 +121,15 @@ export const products: Product[] = [
     price: 10000,
     description: 'نوع خاص من منطقة حضرموت، معروف بلونه الفاتح وطعمه الحاد المميز. اختيار الخبراء.',
     vendor: 'تجار حضرموت',
-    images: ['https://placehold.co/600x600'],
+    images: ['https://placehold.co/600x600/png'],
     rating: 4.6,
     reviews: 98,
     dataAiHint: 'white leaves',
     governorateId: 'hadhramaut',
     marketId: 'seiyun',
     khatTypes: [
-        { id: '7-1', name: 'رؤوس', pricePerGram: 120, description: 'تجربة حضرمية فريدة.' },
-        { id: '7-2', name: 'أميال', pricePerGram: 100, description: 'جيد للاستخدام اليومي.' },
+      { id: '7-1', name: 'رؤوس', pricePerGram: 120, description: 'تجربة حضرمية فريدة.' },
+      { id: '7-2', name: 'أميال', pricePerGram: 100, description: 'جيد للاستخدام اليومي.' },
     ],
   },
 ];
@@ -157,7 +157,7 @@ export const orders: Order[] = [
     status: 'قيد التجهيز',
     total: 19500,
   },
-    {
+  {
     id: 'ORD-003',
     quoteId: 'QT-001',
     date: '2024-07-28',
@@ -227,11 +227,11 @@ export const quoteRequests: QuoteRequest[] = [
     finalPrice: 19500,
     deliveryOption: 'Pickup',
     messages: [
-        { sender: 'Customer', message: 'كم آخر السعر لهذه الكمية؟', timestamp: '2024-07-27T14:00:00Z' },
-        { sender: 'Vendor', message: 'أهلاً بك. يمكنني أن أقدم لك سعرًا نهائيًا قدره 19500 ريال.', timestamp: '2024-07-27T14:05:00Z' },
+      { sender: 'Customer', message: 'كم آخر السعر لهذه الكمية؟', timestamp: '2024-07-27T14:00:00Z' },
+      { sender: 'Vendor', message: 'أهلاً بك. يمكنني أن أقدم لك سعرًا نهائيًا قدره 19500 ريال.', timestamp: '2024-07-27T14:05:00Z' },
     ],
   },
-   {
+  {
     id: 'QT-004',
     date: '2024-07-26',
     customerName: 'عائشة العمودي',
@@ -244,11 +244,11 @@ export const quoteRequests: QuoteRequest[] = [
     deliveryOption: 'Delivery',
     deliveryAddress: 'حي شميلة، صنعاء، اليمن',
     messages: [
-        { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 29000 ريال. في انتظار تأكيدك.', timestamp: '2024-07-26T09:30:00Z' },
-        { sender: 'Customer', message: 'ممتاز، موافقة. متى يمكنني توقع التوصيل؟', timestamp: '2024-07-26T09:35:00Z' },
+      { sender: 'Vendor', message: 'تم تحديد السعر النهائي بـ 29000 ريال. في انتظار تأكيدك.', timestamp: '2024-07-26T09:30:00Z' },
+      { sender: 'Customer', message: 'ممتاز، موافقة. متى يمكنني توقع التوصيل؟', timestamp: '2024-07-26T09:35:00Z' },
     ],
   },
-   {
+  {
     id: 'QT-005',
     date: '2024-07-25',
     customerName: 'خالد البكري',
@@ -314,32 +314,32 @@ export const wallet: Wallet = {
 };
 
 export const transactions: Transaction[] = [
-    {
-        id: 'TXN-001',
-        date: '2024-07-26',
-        type: 'payment',
-        amount: 29000,
-        description: 'دفع للطلب ORD-001'
-    },
-    {
-        id: 'TXN-002',
-        date: '2024-07-25',
-        type: 'deposit',
-        amount: 100000,
-        description: 'إيداع من حساب بنكي'
-    },
-     {
-        id: 'TXN-003',
-        date: '2024-07-24',
-        type: 'refund',
-        amount: 15000,
-        description: 'استرداد للطلب الملغي QT-005'
-    },
-     {
-        id: 'TXN-004',
-        date: '2024-07-22',
-        type: 'payment',
-        amount: 18500,
-        description: 'دفع للطلب X-485'
-    },
+  {
+    id: 'TXN-001',
+    date: '2024-07-26',
+    type: 'payment',
+    amount: 29000,
+    description: 'دفع للطلب ORD-001'
+  },
+  {
+    id: 'TXN-002',
+    date: '2024-07-25',
+    type: 'deposit',
+    amount: 100000,
+    description: 'إيداع من حساب بنكي'
+  },
+  {
+    id: 'TXN-003',
+    date: '2024-07-24',
+    type: 'refund',
+    amount: 15000,
+    description: 'استرداد للطلب الملغي QT-005'
+  },
+  {
+    id: 'TXN-004',
+    date: '2024-07-22',
+    type: 'payment',
+    amount: 18500,
+    description: 'دفع للطلب X-485'
+  },
 ];

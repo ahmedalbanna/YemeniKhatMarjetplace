@@ -1,10 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, Leaf, User, Package2, ClipboardList, LayoutDashboard, Wallet } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,23 +9,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
+import { LayoutDashboard, Leaf, Menu, PersonStandingIcon, User } from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 const navLinks = [
   { href: '/', label: 'السوق' },
-  { href: '/orders', label: 'طلباتي' },
-  { href: '/wallet', label: 'المحفظة' },
-  { href: '/support', label: 'الدعم' },
+  { href: '/marketplace/support', label: 'الدعم' },
 ];
 
 export function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-  
-  const isDashboard = pathname.startsWith('/dashboard');
-  if (isDashboard) return null;
 
+  const isVendor = pathname.startsWith('/vendor');
+  if (isVendor) return null;
+  const isCustomer = pathname.startsWith('/customer');
+  if (isCustomer) return null;
 
   const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
     <Link
@@ -58,33 +57,33 @@ export function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
-           <div className="md:hidden">
-              <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button variant="ghost" className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
-                    <Menu className="h-6 w-6" />
-                    <span className="sr-only">فتح القائمة</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="pr-0 w-[240px]">
-                  <Link
-                    href="/"
-                    className="mb-4 flex items-center space-x-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <Leaf className="h-6 w-6 text-primary" />
-                    <span className="font-bold font-headline">سوق القات</span>
-                  </Link>
-                  <div className="flex flex-col space-y-3">
-                    {navLinks.map(link => <NavLink key={link.href} href={link.href}>{link.label}</NavLink>)}
-                  </div>
-                </SheetContent>
-              </Sheet>
+          <div className="md:hidden">
+            <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">فتح القائمة</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="pr-0 w-[240px]">
+                <Link
+                  href="/"
+                  className="mb-4 flex items-center space-x-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Leaf className="h-6 w-6 text-primary" />
+                  <span className="font-bold font-headline">سوق القات</span>
+                </Link>
+                <div className="flex flex-col space-y-3">
+                  {navLinks.map(link => <NavLink key={link.href} href={link.href}>{link.label}</NavLink>)}
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
-          
+
           <Link href="/" className="flex items-center space-x-2 md:hidden">
-              <Leaf className="h-6 w-6 text-primary" />
-              <span className="font-bold font-headline">السوق</span>
+            <Leaf className="h-6 w-6 text-primary" />
+            <span className="font-bold font-headline">السوق</span>
           </Link>
 
           <DropdownMenu>
@@ -97,13 +96,12 @@ export function Header() {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>حسابي</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild><Link href="/orders"><Package2 className="ml-2 h-4 w-4" />طلباتي</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/wallet"><Wallet className="ml-2 h-4 w-4" />المحفظة</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/dashboard"><LayoutDashboard className="ml-2 h-4 w-4" />لوحة تحكم البائع</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/support">الدعم</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/customer"><PersonStandingIcon className="ml-2 h-4 w-4" />المشتري</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/vendor"><LayoutDashboard className="ml-2 h-4 w-4" />البائع</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/marketplace/support">الدعم</Link></DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild><Link href="/login">تسجيل الدخول</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild><Link href="/register">إنشاء حساب</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/auth/login">تسجيل الدخول</Link></DropdownMenuItem>
+              <DropdownMenuItem asChild><Link href="/auth/register">إنشاء حساب</Link></DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

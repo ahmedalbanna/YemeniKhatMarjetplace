@@ -1,19 +1,19 @@
 
 'use client';
 
-import { notFound, useRouter, useParams } from 'next/navigation';
-import Image from 'next/image';
-import { products } from '@/lib/mock-data';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Star, Send, Leaf } from 'lucide-react';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { useState, useMemo } from 'react';
-import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { products } from '@/lib/mock-data';
 import { cn } from '@/lib/utils';
+import { Leaf, Send, Star } from 'lucide-react';
+import Image from 'next/image';
+import { notFound, useParams, useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 
 type OrderQuantities = {
   [key: string]: number;
@@ -45,18 +45,18 @@ export default function ProductDetailPage() {
       return total + (quantity * type.pricePerGram);
     }, 0) || 0;
   }, [quantities, product.khatTypes]);
-  
+
   const handleRequestQuote = () => {
     const items = Object.entries(quantities)
-        .filter(([_, quantity]) => quantity > 0)
-        .map(([typeId, quantity]) => ({ typeId, quantity }));
-    
+      .filter(([_, quantity]) => quantity > 0)
+      .map(([typeId, quantity]) => ({ typeId, quantity }));
+
     if (items.length > 0) {
-        const query = new URLSearchParams({
-            productId: product.id,
-            items: JSON.stringify(items),
-        }).toString();
-        router.push(`/negotiate?${query}`);
+      const query = new URLSearchParams({
+        productId: product.id,
+        items: JSON.stringify(items),
+      }).toString();
+      router.push(`/marketplace/negotiate?${query}`);
     }
   }
 
@@ -77,7 +77,7 @@ export default function ProductDetailPage() {
             <CarouselPrevious className="left-2" />
             <CarouselNext className="right-2" />
           </Carousel>
-          
+
           <div className="flex flex-col justify-center">
             <Badge variant={'default'} className="mb-2 w-fit bg-primary/20 text-primary-foreground hover:bg-primary/30">{product.strain}</Badge>
             <h1 className="text-3xl lg:text-4xl font-headline font-bold mb-2">{product.name}</h1>
@@ -95,41 +95,41 @@ export default function ProductDetailPage() {
             {product.khatTypes && product.khatTypes.length > 0 && (
               <div className="mb-6">
                 <h3 className="text-lg font-semibold mb-3">اختر الكمية بالجرام لكل فئة</h3>
-                 <div className="space-y-4">
-                    {product.khatTypes.map((type) => (
-                      <Card key={type.id} className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex items-center gap-4 flex-grow">
-                           <Leaf className="w-6 h-6 text-primary/70 shrink-0" />
-                           <div>
-                                <Label htmlFor={type.id} className="font-bold text-base cursor-pointer">{type.name}</Label>
-                                <p className="text-sm text-muted-foreground">{type.description}</p>
-                                <p className="font-semibold text-primary/90 text-sm mt-1">{type.pricePerGram.toLocaleString()} ريال/جرام</p>
-                           </div>
+                <div className="space-y-4">
+                  {product.khatTypes.map((type) => (
+                    <Card key={type.id} className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex items-center gap-4 flex-grow">
+                        <Leaf className="w-6 h-6 text-primary/70 shrink-0" />
+                        <div>
+                          <Label htmlFor={type.id} className="font-bold text-base cursor-pointer">{type.name}</Label>
+                          <p className="text-sm text-muted-foreground">{type.description}</p>
+                          <p className="font-semibold text-primary/90 text-sm mt-1">{type.pricePerGram.toLocaleString()} ريال/جرام</p>
                         </div>
-                        <div className="flex items-center gap-2 w-full sm:w-auto">
-                            <Input 
-                                id={type.id} 
-                                type="number" 
-                                min="0"
-                                step="10"
-                                placeholder="0"
-                                className="w-24 text-center"
-                                value={quantities[type.id] || ''}
-                                onChange={(e) => handleQuantityChange(type.id, e.target.value)}
-                            />
-                            <Label htmlFor={type.id} className="text-sm text-muted-foreground">جرام</Label>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
+                      </div>
+                      <div className="flex items-center gap-2 w-full sm:w-auto">
+                        <Input
+                          id={type.id}
+                          type="number"
+                          min="0"
+                          step="10"
+                          placeholder="0"
+                          className="w-24 text-center"
+                          value={quantities[type.id] || ''}
+                          onChange={(e) => handleQuantityChange(type.id, e.target.value)}
+                        />
+                        <Label htmlFor={type.id} className="text-sm text-muted-foreground">جرام</Label>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
               </div>
             )}
-            
+
             <div className="flex items-center justify-between bg-muted/50 p-4 rounded-lg mb-6">
-                <span className="text-lg font-medium text-muted-foreground">السعر الإجمالي</span>
-                <p className={cn("text-4xl font-bold text-primary transition-colors duration-300", totalCost === 0 && "text-muted-foreground")}>
-                  {totalCost.toLocaleString()} ريال
-                </p>
+              <span className="text-lg font-medium text-muted-foreground">السعر الإجمالي</span>
+              <p className={cn("text-4xl font-bold text-primary transition-colors duration-300", totalCost === 0 && "text-muted-foreground")}>
+                {totalCost.toLocaleString()} ريال
+              </p>
             </div>
 
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">

@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import type { Product } from '@/lib/mock-data';
 import { Star } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface ProductCardProps {
   product: Product;
@@ -11,7 +11,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Link href={`/products/${product.id}`} className="group">
+    <Link href={`/marketplace/products/${product.id}`} className="group">
       <Card className="h-full flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
         <CardHeader className="p-0">
           <div className="relative aspect-square w-full overflow-hidden">
@@ -41,4 +41,3 @@ export function ProductCard({ product }: ProductCardProps) {
   );
 }
 
-    
