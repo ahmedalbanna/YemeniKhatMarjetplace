@@ -61,6 +61,18 @@ export default function OrderDetailPage() {
         }, 1500);
     }
 
+    const handleAcceptPrice = () => {
+        if (quote) {
+            quote.status = 'مقبول';
+        }
+        order.status = 'مقبول';
+        toast({
+            title: 'تم قبول السعر',
+            description: 'يمكنك الآن المتابعة إلى الدفع.',
+        });
+        router.refresh();
+    }
+
     const getStatusVariant = (status: string) => {
         switch (status) {
             case 'تم التوصيل':
@@ -126,6 +138,7 @@ export default function OrderDetailPage() {
 
     const showNegotiation = order.status === 'قيد التفاوض' || order.status === 'مقبول';
     const showPaymentButton = order.status === 'مقبول';
+    const showAcceptPriceButton = order.status === 'قيد التفاوض' && !!quote.finalPrice;
     const isPendingApproval = order.status === 'بانتظار الموافقة';
     const isProcessing = order.status === 'قيد التجهيز';
     const isDelivered = order.status === 'تم التوصيل';
@@ -329,6 +342,16 @@ export default function OrderDetailPage() {
                                 </Card>
                             )}
 
+                            {showAcceptPriceButton && (
+                                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg space-y-3">
+                                    <p className="text-sm text-yellow-800">عرض البائع سعرًا نهائيًا قدره {quote.finalPrice?.toLocaleString()} ريال. يمكنك قبول السعر للمتابعة إلى الدفع، أو مواصلة التفاوض.</p>
+                                    <Button onClick={handleAcceptPrice} className="w-full">
+                                        <CheckCircle className="mr-2 h-4 w-4" />
+                                        قبول السعر والمتابعة للدفع
+                                    </Button>
+                                </div>
+                            )}
+
 
                             {isDelivered && (
                                 <div className="p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
@@ -346,8 +369,8 @@ export default function OrderDetailPage() {
                             )}
                             
                             {showPaymentButton && (
-                                <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg space-y-3">
-                                    <p className="text-sm text-yellow-800">وافق البائع على السعر النهائي. يرجى إتمام عملية الدفع للمتابعة.</p>
+                                <div className="p-4 bg-green-50 border border-green-200 rounded-lg space-y-3">
+                                    <p className="text-sm text-green-800">تم قبول السعر. يرجى إتمام عملية الدفع للمتابعة.</p>
                                     <Button asChild className="w-full">
                                         <Link href={`/customer/payment?amount=${order.total}&orderId=${order.id}`}>
                                             <CreditCard className="mr-2 h-4 w-4" />

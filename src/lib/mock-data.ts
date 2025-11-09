@@ -42,7 +42,7 @@ export type Product = {
   name: string;
   strain: 'أرحبي' | 'صعدي' | 'عنسي' | 'همداني' | 'حضرمي';
   category: 'قات';
-  price: number; // Base price for general display, can be considered price for a base unit like a "maddah"
+  price: number; // Base price for general display, can be considered price for a "maddah"
   description: string;
   vendor: string;
   images: string[];
@@ -170,7 +170,7 @@ export const orders: Order[] = [
     id: 'ORD-006',
     quoteId: 'QT-006',
     date: '2024-07-29',
-    status: 'مقبول',
+    status: 'قيد التفاوض',
     total: 10978,
   },
 ];
@@ -216,21 +216,34 @@ export const quoteRequests: QuoteRequest[] = [
     ],
   },
   {
+    id: 'QT-002',
+    date: '2024-07-29',
+    customerName: 'فاطمة السعيد',
+    productName: 'قات صعدي',
+    khatTypeName: 'بزغة',
+    quantity: 50,
+    status: 'قيد التفاوض',
+    estimatedPrice: 11000, // 50g * 220
+    deliveryOption: 'Pickup',
+    messages: [
+      { sender: 'Vendor', message: 'أهلاً بك، تم قبول طلبك مبدئياً. بخصوص السعر، ما هو السعر الذي يناسبك؟', timestamp: '2024-07-29T11:05:00Z' },
+    ],
+  },
+  {
     id: 'QT-006',
     date: '2024-07-29',
     customerName: 'فاطمة السعيد',
     productName: 'قات صعدي',
     khatTypeName: 'بزغة',
     quantity: 50,
-    status: 'مقبول',
+    status: 'قيد التفاوض',
     estimatedPrice: 11000, // 50g * 220
     finalPrice: 10978,
     deliveryOption: 'Pickup',
     messages: [
       { sender: 'Vendor', message: 'أهلاً بك، تم قبول طلبك مبدئياً. بخصوص السعر، ما هو السعر الذي يناسبك؟', timestamp: '2024-07-29T11:05:00Z' },
       { sender: 'Customer', message: 'مرحبا', timestamp: '2024-07-29T14:43:00Z' },
-      { sender: 'Vendor', message: "تم تحديد السعر النهائي بـ 10,978 ريال. في انتظار موافقة العميل والدفع.", timestamp: '2024-07-29T14:47:00Z' }
-
+      { sender: 'Vendor', message: "لقد عرضت سعرًا نهائيًا قدره 10,978 ريال. في انتظار موافقة العميل.", timestamp: '2024-07-29T14:47:00Z' }
     ],
   },
   {

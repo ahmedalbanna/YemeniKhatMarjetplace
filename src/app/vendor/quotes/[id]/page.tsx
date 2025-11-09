@@ -54,32 +54,33 @@ export default function QuoteDetailPage() {
 
     const handleSendFinalPrice = () => {
         quote.finalPrice = finalPrice;
-        quote.status = 'مقبول';
+        // The status remains 'قيد التفاوض' until the customer accepts.
+        // We just add a message to notify the customer.
         quote.messages.push({
             sender: 'Vendor',
-            message: `تم تحديد السعر النهائي بـ ${finalPrice.toLocaleString()} ريال. في انتظار موافقة العميل والدفع.`,
+            message: `لقد عرضت سعرًا نهائيًا قدره ${finalPrice.toLocaleString()} ريال. في انتظار موافقة العميل.`,
             timestamp: new Date().toISOString()
         });
 
-        // Create or update the order when the final price is sent
+        // Create or update the order with the new potential total
         const existingOrder = orders.find(o => o.quoteId === quote.id);
         if (existingOrder) {
             existingOrder.total = finalPrice;
-            existingOrder.status = 'مقبول'; // Or 'بانتظار الدفع'
+            // The order status also remains 'قيد التفاوض'
         } else {
             const newOrder = {
                 id: `ORD-${Date.now()}`,
                 quoteId: quote.id,
                 date: new Date().toISOString().split('T')[0],
-                status: 'مقبول' as const,
+                status: 'قيد التفاوض' as const, // Stays in negotiation
                 total: finalPrice,
             };
             orders.push(newOrder);
         }
 
         toast({
-            title: 'تم إرسال السعر النهائي',
-            description: 'تم إرسال السعر النهائي للعميل وتحديث الطلب.',
+            title: 'تم إرسال عرض السعر',
+            description: 'تم إرسال عرض السعر النهائي للعميل.',
         });
         router.refresh();
     };
@@ -134,6 +135,7 @@ export default function QuoteDetailPage() {
     const showNegotiation = quote.status === 'قيد التفاوض' || quote.status === 'تم الرد' || quote.status === 'مقبول';
     const isProcessing = quote.status === 'قيد التجهيز';
     const isDelivered = quote.status === 'تم التوصيل';
+    const offerSent = quote.finalPrice && (quote.status === 'قيد التفاوض' || quote.status === 'مقبول');
 
     return (
         <div className="max-w-4xl mx-auto">
@@ -281,6 +283,7 @@ export default function QuoteDetailPage() {
                                             className="pl-12 text-lg font-bold"
                                             value={finalPrice}
                                             onChange={(e) => setFinalPrice(parseInt(e.target.value) || 0)}
+                                            disabled={quote.status === 'مقبول'}
                                         />
                                     </div>
                                 </div>
@@ -288,7 +291,7 @@ export default function QuoteDetailPage() {
                             <CardFooter className="flex justify-end pt-4">
                                 <Button size="lg" onClick={handleSendFinalPrice} disabled={finalPrice <= 0 || quote.status === 'مقبول'}>
                                     <Send className="mr-2 h-5 w-5" />
-                                    {quote.status === 'مقبول' ? 'تم إرسال السعر' : 'إرسال عرض السعر النهائي للعميل'}
+                                    {offerSent ? 'إعادة إرسال عرض السعر' : 'إرسال عرض السعر النهائي'}
                                 </Button>
                             </CardFooter>
                         </Card>
